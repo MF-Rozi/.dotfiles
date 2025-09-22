@@ -45,10 +45,6 @@ This repository contains my personal configuration files (dotfiles) for setting 
 │   ├── aliases.zsh       # Custom aliases
 │   ├── functions.zsh     # Custom functions
 │   └── themes/           # Custom zsh themes
-├── git/
-│   └── .gitconfig        # Git configuration
-├── vim/
-│   └── .vimrc            # Vim configuration
 └── scripts/              # Utility scripts
 ```
 
@@ -59,16 +55,6 @@ This repository contains my personal configuration files (dotfiles) for setting 
 - **Aliases**: Productivity-boosting command shortcuts
 - **Functions**: Useful shell functions for development
 - **Plugin management**: Support for popular zsh frameworks
-
-### Git Configuration
-- Enhanced git aliases for faster workflow
-- Beautiful git log formatting
-- Useful git configurations for development
-
-### Development Tools
-- Vim/Neovim configurations
-- Terminal color schemes
-- Development environment setup scripts
 
 ## 🛠️ Manual Installation
 
