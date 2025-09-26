@@ -1,10 +1,10 @@
 # .dotfiles
 
-A collection of personal dotfiles for Linux environments, featuring zsh configurations, themes, and essential development tools setup.
+A collection of personal dotfiles for Linux environments, featuring Oh My Zsh configurations with custom themes, useful plugins, and productivity-enhancing shell setup.
 
 ## 📋 Overview
 
-This repository contains my personal configuration files (dotfiles) for setting up a consistent development environment across Linux systems. The configurations focus on enhancing productivity and providing a beautiful, functional terminal experience.
+This repository contains my personal configuration files (dotfiles) for setting up a consistent development environment across Linux systems. The configurations include a fully integrated Oh My Zsh setup with custom themes, useful plugins, and productivity enhancements for a beautiful and functional terminal experience.
 
 ## 🚀 Quick Start
 
@@ -22,14 +22,28 @@ This repository contains my personal configuration files (dotfiles) for setting 
    cd ~/.dotfiles
    ```
 
-2. **Run the installation script:**
+2. **Set up Oh My Zsh and copy theme:**
    ```bash
-   # Make the install script executable (when available)
-   chmod +x install.sh
-   ./install.sh
+   # Install Oh My Zsh if not already installed
+   sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+   
+   # Copy the custom theme
+   cp ~/.dotfiles/oh-my-zsh/custom/themes/mf-rozi.zsh-theme ~/.oh-my-zsh/custom/themes/
+   
+   # Copy the zsh configuration
+   cp ~/.dotfiles/zsh/.zshrc ~/.zshrc
    ```
 
-3. **Restart your terminal or source the configuration:**
+3. **Install required plugins:**
+   ```bash
+   # Install zsh-autosuggestions
+   git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+   
+   # Install zsh-syntax-highlighting
+   git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+   ```
+
+4. **Restart your terminal or source the configuration:**
    ```bash
    source ~/.zshrc
    ```
@@ -38,44 +52,57 @@ This repository contains my personal configuration files (dotfiles) for setting 
 
 ```
 .dotfiles/
-├── README.md              # This file
-├── install.sh             # Installation script (coming soon)
+├── README.md                           # This file
 ├── zsh/
-│   ├── .zshrc            # Main zsh configuration
-│   ├── aliases.zsh       # Custom aliases
-│   ├── functions.zsh     # Custom functions
-│   └── themes/           # Custom zsh themes
-└── scripts/              # Utility scripts
+│   └── .zshrc                         # Main zsh configuration with Oh My Zsh setup
+└── oh-my-zsh/
+    └── custom/
+        └── themes/
+            ├── mf-rozi.zsh-theme      # Custom theme with git info, RAM usage, and timing
+            └── example.zsh-theme      # Example theme template
 ```
 
 ## 🎨 Features
 
-### Zsh Configuration
-- **Custom themes**: Beautiful and informative prompt themes
-- **Aliases**: Productivity-boosting command shortcuts
-- **Functions**: Useful shell functions for development
-- **Plugin management**: Support for popular zsh frameworks
+### Oh My Zsh Integration
+- **Fully configured Oh My Zsh setup** with optimized settings
+- **Custom mf-rozi theme** featuring:
+  - Git repository status with clean/dirty indicators
+  - Real-time RAM usage monitoring
+  - Command execution timing
+  - Colorful and informative prompt layout
+- **Essential plugins** pre-configured:
+  - `git` - Git aliases and functions
+  - `zsh-autosuggestions` - Fish-like autosuggestions
+  - `zsh-syntax-highlighting` - Command syntax highlighting
+
+### Shell Enhancements
+- **Beautiful prompts** with useful system information
+- **Performance monitoring** with built-in timing and resource usage
+- **Git integration** with visual status indicators
+- **Optimized for productivity** with sensible defaults
 
 ## 🛠️ Manual Installation
 
 If you prefer to install configurations manually:
 
-### Zsh Setup
+### Oh My Zsh Setup
 ```bash
-# Backup existing config
-cp ~/.zshrc ~/.zshrc.backup
+# Backup existing config if it exists
+cp ~/.zshrc ~/.zshrc.backup 2>/dev/null || true
 
-# Symlink the new configuration
-ln -sf ~/.dotfiles/zsh/.zshrc ~/.zshrc
-```
+# Copy zsh configuration
+cp ~/.dotfiles/zsh/.zshrc ~/.zshrc
 
-### Git Setup
-```bash
-# Backup existing config
-cp ~/.gitconfig ~/.gitconfig.backup
+# Copy custom theme
+cp ~/.dotfiles/oh-my-zsh/custom/themes/mf-rozi.zsh-theme ~/.oh-my-zsh/custom/themes/
 
-# Symlink the new configuration
-ln -sf ~/.dotfiles/git/.gitconfig ~/.gitconfig
+# Install plugins if not already installed
+[ ! -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ] && \
+  git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+
+[ ! -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ] && \
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 ```
 
 ## 🎯 Customization
@@ -90,16 +117,18 @@ Feel free to fork this repository and customize it to your needs:
 3. **Make your changes**
 4. **Test thoroughly before committing**
 
-## 📝 Coming Soon
+## 📝 Planned Enhancements
 
-- [ ] Oh My Zsh integration
-- [ ] Powerlevel10k theme configuration
+- [ ] Automated installation script
+- [ ] Powerlevel10k theme integration option
 - [ ] Tmux configuration
 - [ ] Neovim/Vim plugin management
 - [ ] VS Code settings sync
 - [ ] Terminal emulator configurations
 - [ ] System-specific installation scripts
 - [ ] Automated backup and restore functionality
+- [ ] Additional custom themes
+- [ ] Git configuration files
 
 ## 🤝 Contributing
 
