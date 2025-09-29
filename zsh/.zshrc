@@ -104,4 +104,10 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# custom commands / function
+git-work(){
+ GIT_SSH_COMMAND="ssh -i ~/Keys/github-work" git "$@"
+}
+
+
 export PATH=$PATH:/home/mfrozi/.spicetify
