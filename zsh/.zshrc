@@ -108,6 +108,6 @@ source $ZSH/oh-my-zsh.sh
 git-work(){
  GIT_SSH_COMMAND="ssh -i ~/Keys/github-work" git "$@"
 }
-
+alias docker="podman"
 
 export PATH=$PATH:/home/mfrozi/.spicetify
