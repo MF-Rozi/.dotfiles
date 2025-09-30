@@ -108,6 +108,21 @@ source $ZSH/oh-my-zsh.sh
 git-work(){
  GIT_SSH_COMMAND="ssh -i ~/Keys/github-work" git "$@"
 }
+
+mcconsole(){
+    local password
+    # -s: makes the input silent (no characters shown)
+    read -s "password?Enter password for mfrozi@mc.mfrozi.xyz: "
+  
+    #newline
+    echo 
+
+  sshpass -p "$password" ssh -t mfrozi@mc.mfrozi.xyz  'screen -x mcserver'
+
+}
+
 alias docker="podman"
 
-export PATH=$PATH:/home/mfrozi/.spicetify
+# export PATH=$PATH:/home/mfrozi/.spicetify
+export PATH="$HOME/.local/bin:/usr/lib/node_modules/corepack/shims:$HOME/.spicetify:$PATH"
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
