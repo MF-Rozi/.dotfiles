@@ -43,10 +43,10 @@ ZSH_THEME_GIT_PROMPT_CLEAN="%F{green}✔%f"
 # --- Prompt Definitions ---
 precmd() {
   # Build the left side of the top line
-  local top_left="%F{magenta}%n%f on %W at %t %F{magenta}\u273f *%f"
+  local top_left="%F{magenta}%n%f on %W at %t $(git_prompt_info)"
   
-  # Build the right side of the top line
-  local top_right="$PROMPT_EXEC_TIME%F{green}_MEM: $(prompt_ram)%f"
+  # # Build the right side of the top line
+  # local top_right="$PROMPT_EXEC_TIME%F{green}_MEM: $(prompt_ram)%f"
   
   # Print the top line, using printf to right-align the second part
   # The \n at the end creates the newline for the two-line prompt
@@ -55,7 +55,8 @@ precmd() {
 
 
 # The PROMPT variable defines the bottom line where you type.
-PROMPT='%F{cyan}{%f %F{yellow}%~%f$(git_prompt_info) %F{cyan}}%f %# '
+# PROMPT='%F{cyan}{%f %F{yellow}%~%f$(git_prompt_info) %F{cyan}}%f %# '
+PROMPT='%F{cyan}{%f %F{yellow}%~%f %F{cyan}}%f %# '
 # # Left-side prompt (PROMPT)
 # # Format: username:hostname>~ >git setup
 # PROMPT='%F{green}%n%f:%F{yellow}%m%f>%F{cyan}%~%f>$(git_prompt_info) '
@@ -63,4 +64,4 @@ PROMPT='%F{cyan}{%f %F{yellow}%~%f$(git_prompt_info) %F{cyan}}%f %# '
 # # Right-side prompt (RPROMPT)
 # # Format: time-elapsed<datetime><ram>
 # #RPROMPT='$PROMPT_ELAPSED%F{magenta}<%*><%f$(prompt_ram)%F{magenta}>%f'
-# RPROMPT='$PROMPT_ELAPSED%F{magenta}<%*><%f$(prompt_ram)%F{magenta}>%f'
+RPROMPT='$PROMPT_ELAPSED%F{magenta}<%*><🖥️%f$(prompt_ram)%F{magenta}>%f'
