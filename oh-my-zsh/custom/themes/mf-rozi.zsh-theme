@@ -43,7 +43,8 @@ ZSH_THEME_GIT_PROMPT_CLEAN="%F{green}✔%f"
 # --- Prompt Definitions ---
 precmd() {
   # Build the left side of the top line
-  local top_left="%F{magenta}%n%f on %W at %t $(git_prompt_info)"
+  #local top_left="%F{magenta}%n%f on %W at %t $(git_prompt_info)"
+  local top_left="%F{magenta}%n%f $(LC_TIME=C date +'%A at %-l:%M%p') $(git_prompt_info)"
   
   # # Build the right side of the top line
   # local top_right="$PROMPT_EXEC_TIME%F{green}_MEM: $(prompt_ram)%f"
@@ -64,4 +65,4 @@ PROMPT='%F{cyan}{%f %F{yellow}%~%f %F{cyan}}%f %# '
 # # Right-side prompt (RPROMPT)
 # # Format: time-elapsed<datetime><ram>
 # #RPROMPT='$PROMPT_ELAPSED%F{magenta}<%*><%f$(prompt_ram)%F{magenta}>%f'
-RPROMPT='$PROMPT_ELAPSED%F{magenta}<%*><🖥️%f$(prompt_ram)%F{magenta}>%f'
+RPROMPT='$PROMPT_EXEC_TIME%F{magenta}<%W>%f🖥️$(prompt_ram)%F{magenta}>%f'
