@@ -35,9 +35,20 @@ ZSH_THEME_GIT_PROMPT_CLEAN="%F{green}✔%f"
 
 
 # --- Prompt Definitions ---
-precmd() {
-  local top_left="%F{magenta}%n%f $(LC_TIME=C date +'%A at %-l:%M%p')$(git_prompt_info)"
-  printf "%s%*s\n" "${(%)top_left}" "$(($COLUMNS - ${#top_left} - ${#top_right}))" "${(%)top_right}"
+precmd() { 
+ local git_info=""
+  if git rev-parse --git-dir > /dev/null 2>&1; then
+    local branch=$(git branch --show-current 2>/dev/null)
+    if [[ -n $branch ]]; then
+      if git diff --quiet 2>/dev/null && git diff --cached --quiet 2>/dev/null; then
+        git_info="${ZSH_THEME_GIT_PROMPT_PREFIX}${branch}${ZSH_THEME_GIT_PROMPT_CLEAN}${ZSH_THEME_GIT_PROMPT_SUFFIX}"
+      else
+        git_info="${ZSH_THEME_GIT_PROMPT_PREFIX}${branch}${ZSH_THEME_GIT_PROMPT_DIRTY}${ZSH_THEME_GIT_PROMPT_SUFFIX}"
+      fi
+    fi
+  fi
+  local top_left="%F{magenta}%n%f $(LC_TIME=C date +'%A at %-l:%M%p')${git_info}"
+  printf "%s\n" "${(%)top_left}"
 }
 
 PROMPT='%F{cyan}{%f %F{yellow}%~%f %F{cyan}}%f %# '
