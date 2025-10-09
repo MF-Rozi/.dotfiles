@@ -80,6 +80,7 @@ copy_configuration() {
         sudo cp "$DOTFILES_CONFIG_DIR"/* "$DNSCRYPT_CONFIG_DIR"/
         sudo chown root:root "$DNSCRYPT_CONFIG_DIR"/*
         sudo chmod 644 "$DNSCRYPT_CONFIG_DIR"/*
+        sudo chmod 755 "$DNSCRYPT_CONFIG_DIR"
         print_success "Configuration files copied successfully"
     else
         print_error "Configuration directory not found: $DOTFILES_CONFIG_DIR"
