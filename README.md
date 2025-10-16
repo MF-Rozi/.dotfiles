@@ -8,45 +8,39 @@ This repository contains my personal configuration files (dotfiles) for setting 
 
 ## 🚀 Quick Start
 
-### Prerequisites
+Setting up your environment is as simple as running a single command. The master install script handles everything from cloning the repository to executing all necessary setup scripts.
 
-- Linux-based operating system (Ubuntu, Debian, Arch, etc.)
-- Git
-- Zsh shell (will be installed if not present)
+### One-Liner Installation
 
-### Installation
+This command will clone the repository, change into the directory, and execute the installation script.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/MF-Rozi/.dotfiles.git ~/.dotfiles
-   cd ~/.dotfiles
-   ```
+```bash
+git clone https://github.com/MF-Rozi/.dotfiles.git ~/dotfiles && cd ~/dotfiles && chmod +x ./install.sh && ./install.sh
+```
 
-2. **Set up Oh My Zsh and copy theme:**
-   ```bash
-   # Install Oh My Zsh if not already installed
-   sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-   
-   # Copy the custom theme
-   cp ~/.dotfiles/oh-my-zsh/custom/themes/mf-rozi.zsh-theme ~/.oh-my-zsh/custom/themes/
-   
-   # Copy the zsh configuration
-   cp ~/.dotfiles/zsh/.zshrc ~/.zshrc
-   ```
+### Manual Steps
 
-3. **Install required plugins:**
-   ```bash
-   # Install zsh-autosuggestions
-   git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-   
-   # Install zsh-syntax-highlighting
-   git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-   ```
+If you prefer to run the setup scripts individually instead of using the master `install.sh` script:
 
-4. **Restart your terminal or source the configuration:**
-   ```bash
-   source ~/.zshrc
-   ```
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/MF-Rozi/.dotfiles.git ~/dotfiles
+    cd ~/dotfiles
+    ```
+
+2.  **Run the Zsh setup script:**
+    ```bash
+    chmod +x scripts/setup-zsh.sh
+    ./scripts/setup-zsh.sh
+    ```
+
+3.  **Run the dnscrypt-proxy setup script:**
+    ```bash
+    chmod +x scripts/setup-dnscrypt-proxy.sh
+    ./scripts/setup-dnscrypt-proxy.sh
+    ```
+
+After the scripts finish, restart your terminal to see the changes.
 
 ## 📁 Repository Structure
 
