@@ -3,6 +3,8 @@
 # This script installs ASDF version manager and sets up the environment.
 
 set -e  # Exit on any error
+
+# Plugin Versions
 NODE_VERSION_DEFAULT="Latest:20"
 
 check_root() {
