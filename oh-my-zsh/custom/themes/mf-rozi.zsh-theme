@@ -33,10 +33,9 @@ ZSH_THEME_GIT_PROMPT_SUFFIX="%F{blue})%f"
 ZSH_THEME_GIT_PROMPT_DIRTY="%F{red}*%f"
 ZSH_THEME_GIT_PROMPT_CLEAN="%F{green}✔%f"
 
-
-# --- Prompt Definitions ---
-precmd() { 
- local git_info=""
+# Get git info for the prompt
+git_information(){
+  local git_info=""
   if git rev-parse --git-dir > /dev/null 2>&1; then
     local branch=$(git branch --show-current 2>/dev/null)
     if [[ -n $branch ]]; then
@@ -47,6 +46,12 @@ precmd() {
       fi
     fi
   fi
+  echo -n "$git_info"
+}
+
+# --- Prompt Definitions ---
+precmd() { 
+ local git_info="$(git_information)"
   local top_left="%F{magenta}%n%f $(LC_TIME=C date +'%A at %-l:%M%p')${git_info}"
   printf "%s\n" "${(%)top_left}"
 }
