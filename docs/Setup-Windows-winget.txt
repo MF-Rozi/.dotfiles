@@ -1,0 +1,14 @@
+winget install --id=Zen-Team.Zen-Browser  -e
+winget install --id=Microsoft.PowerToys -e
+winget install google.chrome
+#Acer Care center
+https://global-download.acer.com/GDFiles/Application/Acer%20Care%20Center/Acer%20Care%20Center_Acer_4.00.3058_W11x64_A.zip?acerid=638815183892209708&Step1=&Step2=&Step3=NITRO%20AN515-55&OS=ALL&LC=id&BC=ACER&SC=AAP_1
+#Nitro Sense
+https://global-download.acer.com/GDFiles/Application/Nitro%20Sense/Nitro%20Sense_Acer_3.01.3028_W11x64_A.zip?acerid=637813743040356772&Step1=&Step2=&Step3=NITRO%20AN515-55&OS=ALL&LC=id&BC=ACER&SC=AAP_1
+# Section not use Administrator privilege
+winget install --id spotify.spotify --version 1.2.6.863.ge7902f05
+iwr -useb https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.ps1 | iex
+# End of Section not use Administrator Privilege
+winget install -e --id Microsoft.VisualStudioCode
+winget install WhatsApp
+winget install -e --id Git.Git
