@@ -126,3 +126,8 @@ alias docker="podman"
 # export PATH=$PATH:/home/mfrozi/.spicetify
 export PATH="$HOME/.local/bin:/usr/lib/node_modules/corepack/shims:$HOME/.spicetify:$PATH"
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+## [Completion]
+## Completion scripts setup. Remove the following line to uninstall
+[[ -f /home/mfrozi/.dart-cli-completion/zsh-config.zsh ]] && . /home/mfrozi/.dart-cli-completion/zsh-config.zsh || true
+## [/Completion]
+
