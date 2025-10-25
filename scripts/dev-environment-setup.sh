@@ -19,6 +19,14 @@ flutterSetup(){
         echo -e "${BLUE}[INFO]${NC} Installing FVM (Flutter Version Manager)..."
         sudo pacman -S --noconfirm dart
         echo -e "${GREEN}[SUCCESS]${NC} FVM installed successfully."
+        if command -v fvm &> /dev/null; then
+            echo -e "${GREEN}[SUCCESS]${NC} FVM is now available."
+            fvm install stable
+            echo -e "${GREEN}[SUCCESS]${NC} Flutter stable version installed."
+        else
+            echo -e "${RED}[ERROR]${NC} FVM installation failed."
+            exit 1
+        fi
     fi
 }
 
