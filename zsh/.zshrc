@@ -8,8 +8,8 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-#ZSH_THEME="robbyrussell"
-ZSH_THEME="mf-rozi"
+ZSH_THEME="spaceship"
+#ZSH_THEME="mf-rozi"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -131,3 +131,5 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 [[ -f /home/mfrozi/.dart-cli-completion/zsh-config.zsh ]] && . /home/mfrozi/.dart-cli-completion/zsh-config.zsh || true
 ## [/Completion]
 
+#adding google chrome for flutter doctor
+export CHROME_EXECUTABLE="/opt/google/chrome/google-chrome"
