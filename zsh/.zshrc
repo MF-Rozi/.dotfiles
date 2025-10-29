@@ -124,12 +124,21 @@ mcconsole(){
 alias docker="podman"
 
 # export PATH=$PATH:/home/mfrozi/.spicetify
-export PATH="$HOME/.local/bin:/usr/lib/node_modules/corepack/shims:$HOME/.spicetify:$PATH"
+# export PATH="$HOME/.local/bin:/usr/lib/node_modules/corepack/shims:$HOME/.spicetify:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="/usr/lib/node_modules/corepack/shims:$PATH"
+export PATH="$HOME/.spicetify:$PATH"
+
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+
 ## [Completion]
 ## Completion scripts setup. Remove the following line to uninstall
 [[ -f /home/mfrozi/.dart-cli-completion/zsh-config.zsh ]] && . /home/mfrozi/.dart-cli-completion/zsh-config.zsh || true
 ## [/Completion]
 
-#adding google chrome for flutter doctor
+# adding google chrome for flutter doctor
 export CHROME_EXECUTABLE="/opt/google/chrome/google-chrome"
+
+# add android platform-tools to path
+export ANDROID_SDK_HOME="$HOME/Android/Sdk"
+export PATH="$ANDROID_SDK_HOME/platform-tools:$PATH"
