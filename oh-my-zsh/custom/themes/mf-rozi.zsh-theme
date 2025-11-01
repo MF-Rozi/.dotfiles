@@ -58,4 +58,4 @@ precmd() {
 
 PROMPT='%F{cyan}{%f %F{yellow}%~%f %F{cyan}}%f %# '
 
-RPROMPT='$PROMPT_EXEC_TIME%F{magenta}<%W><%f🖥️$(prompt_ram)%F{magenta}>%f'
+RPROMPT='$PROMPT_EXEC_TIME%F{magenta}<%W> %f🖥️$(prompt_ram)%F{magenta}%f'
