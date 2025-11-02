@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ------------------------------------------------------
-#  Master Setup Script for M-F-Rozi's Dotfiles
+#  Master Setup Script for MF-Rozi's Dotfiles
 # ------------------------------------------------------
 # This script automates the setup of the entire environment
 # by executing all the individual setup scripts located
