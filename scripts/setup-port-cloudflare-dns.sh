@@ -7,7 +7,7 @@ set -e
 
 # Configuration
 # Add or remove ports as needed
-PORTS=(19132 25565)  # 19132=Minecraft Bedrock, 25565=Minecraft Java
+PORTS=(19132)  # 19132=Minecraft Bedrock
 CLOUDFLARE_DNS="1.1.1.1"
 
 # Colors
@@ -46,10 +46,10 @@ setup_rules() {
     for PORT in "${PORTS[@]}"; do
         local MARK_VALUE=$PORT
         
-        # Mark packets from port
+        # Mark packets TO port (for clients connecting to servers)
         print_status "Creating packet marking rules for port $PORT..."
-        iptables -t mangle -A OUTPUT -p udp --sport $PORT -j MARK --set-mark $MARK_VALUE
-        iptables -t mangle -A OUTPUT -p tcp --sport $PORT -j MARK --set-mark $MARK_VALUE
+        iptables -t mangle -A OUTPUT -p udp --dport $PORT -j MARK --set-mark $MARK_VALUE
+        iptables -t mangle -A OUTPUT -p tcp --dport $PORT -j MARK --set-mark $MARK_VALUE
 
         # Route marked packets' DNS queries to Cloudflare
         print_status "Routing DNS queries to Cloudflare ($CLOUDFLARE_DNS) for port $PORT..."
@@ -107,8 +107,8 @@ remove_rules() {
         local MARK_VALUE=$PORT
         
         # Remove mangle rules
-        iptables -t mangle -D OUTPUT -p udp --sport $PORT -j MARK --set-mark $MARK_VALUE 2>/dev/null || true
-        iptables -t mangle -D OUTPUT -p tcp --sport $PORT -j MARK --set-mark $MARK_VALUE 2>/dev/null || true
+        iptables -t mangle -D OUTPUT -p udp --dport $PORT -j MARK --set-mark $MARK_VALUE 2>/dev/null || true
+        iptables -t mangle -D OUTPUT -p tcp --dport $PORT -j MARK --set-mark $MARK_VALUE 2>/dev/null || true
 
         # Remove NAT rules
         iptables -t nat -D OUTPUT -p udp --dport 53 -m mark --mark $MARK_VALUE -j DNAT --to-destination $CLOUDFLARE_DNS:53 2>/dev/null || true
