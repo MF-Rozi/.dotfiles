@@ -23,12 +23,14 @@ git clone https://github.com/MF-Rozi/.dotfiles.git ~/dotfiles && cd ~/dotfiles &
 If you prefer to run the setup scripts individually instead of using the master `install.sh` script:
 
 1.  **Clone the repository:**
+
     ```bash
     git clone https://github.com/MF-Rozi/.dotfiles.git ~/dotfiles
     cd ~/dotfiles
     ```
 
 2.  **Run the Zsh setup script:**
+
     ```bash
     chmod +x scripts/setup-zsh.sh
     ./scripts/setup-zsh.sh
@@ -54,11 +56,21 @@ After the scripts finish, restart your terminal to see the changes.
         └── themes/
             ├── mf-rozi.zsh-theme      # Custom theme with git info, RAM usage, and timing
             └── example.zsh-theme      # Example theme template
+├── dnscrypt-proxy/                        # DNSCrypt-Proxy configuration files
+│   ├── dnscrypt-proxy.toml               # Main configuration
+│   ├── allowed-ips.txt                   # IP whitelist
+│   ├── allowed-names.txt                 # Domain whitelist
+│   ├── blocked-ips.txt                   # IP blocklist
+│   ├── blocked-names.txt                 # Domain blocklist
+│   ├── captive-portals.txt               # Captive portal exceptions
+│   ├── cloaking-rules.txt                # DNS cloaking rules
+│   └── forwarding-rules.txt              # DNS forwarding rules
 ```
 
 ## 🎨 Features
 
 ### Oh My Zsh Integration
+
 - **Fully configured Oh My Zsh setup** with optimized settings
 - **Custom mf-rozi theme** featuring:
   - Git repository status with clean/dirty indicators
@@ -71,6 +83,7 @@ After the scripts finish, restart your terminal to see the changes.
   - `zsh-syntax-highlighting` - Command syntax highlighting
 
 ### Shell Enhancements
+
 - **Beautiful prompts** with useful system information
 - **Performance monitoring** with built-in timing and resource usage
 - **Git integration** with visual status indicators
@@ -81,6 +94,7 @@ After the scripts finish, restart your terminal to see the changes.
 If you prefer to install configurations manually:
 
 ### Oh My Zsh Setup
+
 ```bash
 # Backup existing config if it exists
 cp ~/.zshrc ~/.zshrc.backup 2>/dev/null || true
