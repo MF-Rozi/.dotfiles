@@ -7,7 +7,7 @@ set -e
 
 # Configuration
 # Add or remove ports as needed
-PORTS=(19132)  # 19132=Minecraft Bedrock
+PORTS=(19132 25565)  # 19132=Minecraft Bedrock, 25565=Minecraft Java
 CLOUDFLARE_DNS="1.1.1.1"
 
 # Colors
