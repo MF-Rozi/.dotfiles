@@ -48,14 +48,14 @@ After the scripts finish, restart your terminal to see the changes.
 
 ```
 .dotfiles/
-├── README.md                           # This file
+├── README.md                              # This file
+├── install.sh                             # Master installation script
 ├── zsh/
-│   └── .zshrc                         # Main zsh configuration with Oh My Zsh setup
-└── oh-my-zsh/
-    └── custom/
-        └── themes/
-            ├── mf-rozi.zsh-theme      # Custom theme with git info, RAM usage, and timing
-            └── example.zsh-theme      # Example theme template
+│   └── .zshrc                            # Main zsh configuration with Oh My Zsh setup
+├── oh-my-zsh/
+│   └── custom/
+│       └── themes/
+│           └── mf-rozi.zsh-theme         # Custom theme with git info, RAM usage, and timing
 ├── dnscrypt-proxy/                        # DNSCrypt-Proxy configuration files
 │   ├── dnscrypt-proxy.toml               # Main configuration
 │   ├── allowed-ips.txt                   # IP whitelist
