@@ -65,6 +65,12 @@ After the scripts finish, restart your terminal to see the changes.
 │   ├── captive-portals.txt               # Captive portal exceptions
 │   ├── cloaking-rules.txt                # DNS cloaking rules
 │   └── forwarding-rules.txt              # DNS forwarding rules
+├── scripts/                               # Automated setup scripts
+│   ├── setup-zsh.sh                      # Zsh and Oh My Zsh installation
+│   ├── setup-dnscrypt-proxy.sh           # DNSCrypt-Proxy setup for Arch Linux
+│   ├── setup-port-cloudflare-dns.sh      # Route specific ports to Cloudflare DNS
+│   ├── asdf-setup.sh                     # ASDF version manager setup
+│   └── dev-environment-setup.sh          # Development environment setup
 ```
 
 ## 🎨 Features
