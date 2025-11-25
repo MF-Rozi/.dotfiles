@@ -71,6 +71,8 @@ After the scripts finish, restart your terminal to see the changes.
 │   ├── setup-port-cloudflare-dns.sh      # Route specific ports to Cloudflare DNS
 │   ├── asdf-setup.sh                     # ASDF version manager setup
 │   └── dev-environment-setup.sh          # Development environment setup
+├── shortcuts/
+│   └── shortcuts.md                      # Quick reference commands and shortcuts
 ```
 
 ## 🎨 Features
