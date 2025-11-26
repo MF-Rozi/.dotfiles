@@ -73,6 +73,9 @@ After the scripts finish, restart your terminal to see the changes.
 │   └── dev-environment-setup.sh          # Development environment setup
 ├── shortcuts/
 │   └── shortcuts.md                      # Quick reference commands and shortcuts
+└── docs/
+    ├── Setup-Windows-winget.txt          # Windows application list (winget)
+    └── setup-windows.ps1                 # Windows automated setup script
 ```
 
 ## 🎨 Features
