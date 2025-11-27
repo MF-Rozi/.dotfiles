@@ -11,44 +11,6 @@ export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="spaceship"
 #ZSH_THEME="mf-rozi"
 
-# Custom Spaceship section for RAM usage
-spaceship_ram() {
-  [[ $SPACESHIP_RAM_SHOW == false ]] && return
-
-  local ram_used ram_total ram_percent
-  if [[ -f /proc/meminfo ]]; then
-    ram_total=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
-    ram_available=$(awk '/MemAvailable/ {print $2}' /proc/meminfo)
-    ram_used=$((ram_total - ram_available))
-    ram_percent=$((ram_used * 100 / ram_total))
-    
-    ram_used_gb=$(awk "BEGIN {printf \"%.1f\", $ram_used/1024/1024}")
-    ram_total_gb=$(awk "BEGIN {printf \"%.1f\", $ram_total/1024/1024}")
-  else
-    return
-  fi
-
-  spaceship::section \
-    --color "$SPACESHIP_RAM_COLOR" \
-    --prefix "$SPACESHIP_RAM_PREFIX" \
-    --suffix "$SPACESHIP_RAM_SUFFIX" \
-    --symbol "$SPACESHIP_RAM_SYMBOL" \
-    "${ram_used_gb}/${ram_total_gb}GB (${ram_percent}%)"
-}
-
-# Spaceship RAM configuration
-SPACESHIP_RAM_SHOW="${SPACESHIP_RAM_SHOW=true}"
-SPACESHIP_RAM_PREFIX="${SPACESHIP_RAM_PREFIX=""}"
-SPACESHIP_RAM_SUFFIX="${SPACESHIP_RAM_SUFFIX=" "}"
-SPACESHIP_RAM_SYMBOL="${SPACESHIP_RAM_SYMBOL="🖥️ "}"
-SPACESHIP_RAM_COLOR="${SPACESHIP_RAM_COLOR="yellow"}"
-
-# Add RAM to the right prompt
-SPACESHIP_RPROMPT_ORDER=(
-  ram
-  time
-)
-
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
@@ -143,6 +105,48 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # custom commands / function
+
+# Custom Spaceship section for RAM usage
+spaceship_ram() {
+  [[ $SPACESHIP_RAM_SHOW == false ]] && return
+
+  local ram_used ram_total ram_percent
+  if [[ -f /proc/meminfo ]]; then
+    ram_total=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+    ram_available=$(awk '/MemAvailable/ {print $2}' /proc/meminfo)
+    ram_used=$((ram_total - ram_available))
+    ram_percent=$((ram_used * 100 / ram_total))
+    
+    ram_used_gb=$(awk "BEGIN {printf \"%.1f\", $ram_used/1024/1024}")
+    ram_total_gb=$(awk "BEGIN {printf \"%.1f\", $ram_total/1024/1024}")
+  else
+    return
+  fi
+
+  spaceship::section \
+    --color "$SPACESHIP_RAM_COLOR" \
+    --prefix "$SPACESHIP_RAM_PREFIX" \
+    --suffix "$SPACESHIP_RAM_SUFFIX" \
+    --symbol "$SPACESHIP_RAM_SYMBOL" \
+    "${ram_used_gb}/${ram_total_gb}GB (${ram_percent}%)"
+}
+
+# Spaceship RAM configuration
+SPACESHIP_RAM_SHOW="${SPACESHIP_RAM_SHOW=true}"
+SPACESHIP_RAM_PREFIX="${SPACESHIP_RAM_PREFIX=""}"
+SPACESHIP_RAM_SUFFIX="${SPACESHIP_RAM_SUFFIX=" "}"
+SPACESHIP_RAM_SYMBOL="${SPACESHIP_RAM_SYMBOL="🖥️ "}"
+SPACESHIP_RAM_COLOR="${SPACESHIP_RAM_COLOR="yellow"}"
+
+
+SPACESHIP_RPROMPT_ORDER=(
+  ram
+  time
+)
+
+
+
+
 git-work(){
  GIT_SSH_COMMAND="ssh -i ~/Keys/github-work" git "$@"
 }
