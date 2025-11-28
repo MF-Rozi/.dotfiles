@@ -144,6 +144,15 @@ SPACESHIP_RPROMPT_ORDER=(
   time
 )
 
+SPACESHIP_USER_SHOW="always"
+# SPACESHIP_PROMPT_ORDER=(
+#   user          # Username
+#   dir           # Current directory
+#   git           # Git section
+#   line_sep      # Line break
+#   char          # Prompt character
+# )
+
 
 
 
