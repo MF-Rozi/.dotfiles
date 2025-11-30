@@ -145,6 +145,7 @@ SPACESHIP_RPROMPT_ORDER=(
 )
 
 SPACESHIP_USER_SHOW="always"
+# SPACESHIP_USER_SUFFIX="${SPACESHIP_USER_SUFFIX="@"}"
 # SPACESHIP_PROMPT_ORDER=(
 #   user          # Username
 #   dir           # Current directory
