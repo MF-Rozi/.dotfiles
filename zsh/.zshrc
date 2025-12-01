@@ -128,7 +128,7 @@ spaceship_ram() {
     --prefix "$SPACESHIP_RAM_PREFIX" \
     --suffix "$SPACESHIP_RAM_SUFFIX" \
     --symbol "$SPACESHIP_RAM_SYMBOL" \
-    "${ram_used_gb}/${ram_total_gb}GB (${ram_percent}%)"
+    "${ram_used_gb}/${ram_total_gb}GB (${ram_percent}%%)"
 }
 
 # Spaceship RAM configuration
