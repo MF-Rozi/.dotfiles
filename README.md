@@ -4,7 +4,7 @@ A collection of personal dotfiles for Linux environments, featuring Oh My Zsh co
 
 ## 📋 Overview
 
-This repository contains my personal configuration files (dotfiles) for setting up a consistent development environment across Linux systems. The configurations include a fully integrated Oh My Zsh setup with custom themes, useful plugins, and productivity enhancements for a beautiful and functional terminal experience.
+This repository contains my personal configuration files (dotfiles) for setting up a consistent development environment across Linux and Windows systems. The configurations include a fully integrated Oh My Zsh setup with Spaceship theme, custom themes, useful plugins, DNSCrypt-Proxy for secure DNS, and productivity enhancements for a beautiful and functional terminal experience.
 
 ## 🚀 Quick Start
 
