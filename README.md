@@ -41,6 +41,11 @@ If you prefer to run the setup scripts individually instead of using the master 
     chmod +x scripts/setup-dnscrypt-proxy.sh
     ./scripts/setup-dnscrypt-proxy.sh
     ```
+4.  **Run the port-specific Cloudflare DNS setup (optional):**
+    ```bash
+    chmod +x scripts/setup-port-cloudflare-dns.sh
+    sudo ./scripts/setup-port-cloudflare-dns.sh
+    ```
 
 After the scripts finish, restart your terminal to see the changes.
 
