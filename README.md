@@ -88,7 +88,14 @@ After the scripts finish, restart your terminal to see the changes.
 ### Oh My Zsh Integration
 
 - **Fully configured Oh My Zsh setup** with optimized settings
-- **Custom mf-rozi theme** featuring:
+- **Spaceship Prompt** as the default theme featuring:
+  - Username display (configurable)
+  - Current directory with git integration
+  - Git repository status with branch information
+  - Custom RAM usage section on the right prompt
+  - Time display on the right prompt
+  - Clean and customizable prompt layout
+- **Custom mf-rozi theme**(alternative) featuring:
   - Git repository status with clean/dirty indicators
   - Real-time RAM usage monitoring
   - Command execution timing
