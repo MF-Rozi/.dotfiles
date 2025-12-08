@@ -108,8 +108,9 @@ After the scripts finish, restart your terminal to see the changes.
 ### Shell Enhancements
 
 - **Beautiful prompts** with useful system information
-- **Performance monitoring** with built-in timing and resource usage
+- **Performance monitoring** with built-in RAM usage and timing
 - **Git integration** with visual status indicators
+- **Spaceship Prompt customization** with custom sections
 - **Optimized for productivity** with sensible defaults
 
 ## 🛠️ Manual Installation
