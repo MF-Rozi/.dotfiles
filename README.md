@@ -113,6 +113,17 @@ After the scripts finish, restart your terminal to see the changes.
 - **Spaceship Prompt customization** with custom sections
 - **Optimized for productivity** with sensible defaults
 
+### Network & Security
+
+- **DNSCrypt-Proxy** configuration for secure and private DNS
+  - Custom blocklists and allowlists
+  - DNS cloaking and forwarding rules
+  - Systemd integration for Arch Linux
+- **Port-specific DNS routing** for applications like Minecraft
+  - Route traffic from specific ports to Cloudflare DNS
+  - Iptables-based packet marking and routing
+  - Persistent rules across reboots
+
 ## 🛠️ Manual Installation
 
 If you prefer to install configurations manually:
