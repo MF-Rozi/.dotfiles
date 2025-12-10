@@ -120,9 +120,16 @@ After the scripts finish, restart your terminal to see the changes.
   - DNS cloaking and forwarding rules
   - Systemd integration for Arch Linux
 - **Port-specific DNS routing** for applications like Minecraft
+
   - Route traffic from specific ports to Cloudflare DNS
   - Iptables-based packet marking and routing
   - Persistent rules across reboots
+
+  ### Development Tools
+
+- **ASDF version manager** setup script
+- **Development environment** automated configuration
+- **PATH management** for various development tools
 
 ## 🛠️ Manual Installation
 
