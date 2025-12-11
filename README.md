@@ -131,6 +131,15 @@ After the scripts finish, restart your terminal to see the changes.
 - **Development environment** automated configuration
 - **PATH management** for various development tools
 
+### Windows Support
+
+- **Automated Windows setup** using winget and PowerShell
+  - Browser installation (Zen Browser, Chrome)
+  - Development tools (VS Code, Git)
+  - Utilities (PowerToys, WhatsApp)
+  - Acer-specific software (Care Center, Nitro Sense)
+  - User-level apps (Spotify with Spicetify)
+
 ## 🛠️ Manual Installation
 
 If you prefer to install configurations manually:
