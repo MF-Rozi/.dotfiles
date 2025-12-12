@@ -176,6 +176,27 @@ Feel free to fork this repository and customize it to your needs:
 3. **Make your changes**
 4. **Test thoroughly before committing**
 
+### Spaceship Prompt Customization
+
+You can customize the Spaceship prompt by editing the configuration in `.zshrc`:
+
+```bash
+# Show/hide username
+SPACESHIP_USER_SHOW="true"  # or "always", "false"
+
+# Customize RAM section
+SPACESHIP_RAM_SYMBOL="💾 "  # Change the symbol
+SPACESHIP_RAM_COLOR="yellow"  # Change the color
+
+# Modify prompt order
+SPACESHIP_PROMPT_ORDER=(
+  user
+  dir
+  git
+  line_sep
+  char
+)
+
 ## 📝 Planned Enhancements
 
 - [ ] Automated installation script
@@ -214,3 +235,4 @@ If you have any questions or run into issues:
 ---
 
 **Happy coding!** 🚀
+```
