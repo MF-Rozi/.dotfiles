@@ -199,16 +199,13 @@ SPACESHIP_PROMPT_ORDER=(
 
 ## 📝 Planned Enhancements
 
-- [ ] Automated installation script
-- [ ] Powerlevel10k theme integration option
 - [ ] Tmux configuration
-- [ ] Neovim/Vim plugin management
-- [ ] VS Code settings sync
-- [ ] Terminal emulator configurations
-- [ ] System-specific installation scripts
+- [ ] Neovim/Vim plugin management with modern setup
+- [ ] VS Code settings sync and extension list
+- [ ] Terminal emulator configurations (Alacritty, Kitty)
+- [ ] Additional custom themes and color schemes
+- [ ] Git configuration files (.gitconfig, .gitignore_global)
 - [ ] Automated backup and restore functionality
-- [ ] Additional custom themes
-- [ ] Git configuration files
 
 ## 🤝 Contributing
 
