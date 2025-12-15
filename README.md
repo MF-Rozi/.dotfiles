@@ -228,8 +228,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - Inspired by the amazing dotfiles community
+- Thanks to the [Spaceship Prompt](https://spaceship-prompt.sh/) team for their beautiful prompt
 - Thanks to all the open-source projects that make these configurations possible
-- Special thanks to the zsh and vim communities for their excellent documentation
+- Special thanks to the zsh, Oh My Zsh, and vim communities for their excellent documentation
+- DNSCrypt-Proxy for secure DNS resolution
 
 ## 📞 Support
 
