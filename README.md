@@ -196,6 +196,7 @@ SPACESHIP_PROMPT_ORDER=(
   line_sep
   char
 )
+```
 
 ## 📝 Planned Enhancements
 
@@ -241,7 +242,4 @@ If you have any questions or run into issues:
 2. Create a new issue if your problem isn't already reported
 3. Provide as much detail as possible about your system and the issue
 
----
-
 **Happy coding!** 🚀
-```
