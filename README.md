@@ -242,4 +242,19 @@ If you have any questions or run into issues:
 2. Create a new issue if your problem isn't already reported
 3. Provide as much detail as possible about your system and the issue
 
+## 💡 Tips
+
+### Recommended Fonts
+
+For the best experience with Spaceship theme and icons, install a Nerd Font:
+
+```bash
+# Install JetBrains Mono Nerd Font (recommended)
+yay -S nerd-fonts-jetbrains-mono
+
+# Or install other popular Nerd Fonts
+yay -S nerd-fonts-fira-code
+yay -S nerd-fonts-hack
+```
+
 **Happy coding!** 🚀
