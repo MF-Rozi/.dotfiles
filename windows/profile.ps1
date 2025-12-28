@@ -3,3 +3,6 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\jandedobbeleer.omp.json" | 
 
 # Environment variables
 $env:EDITOR = "code"
+
+# Unix-like aliases
+Set-Alias -Name pwd -Value Get-Location
