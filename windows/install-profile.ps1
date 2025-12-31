@@ -1,15 +1,55 @@
 # PowerShell Profile Installation Script
 # This script installs the PowerShell profile and its dependencies
 
+param(
+    [switch]$SkipOhMyPosh,
+    [switch]$SkipBackup,
+    [switch]$InstallTerminalIcons,
+    [switch]$InstallPSReadLine,
+    [switch]$NoPrompt,
+    [string]$ProfileSource = "",
+    [switch]$Help
+)
+
+# Show help
+if ($Help) {
+    Write-Host @"
+PowerShell Profile Installation Script
+
+Usage: .\install-profile.ps1 [options]
+
+Options:
+  -SkipOhMyPosh          Skip Oh-My-Posh installation
+  -SkipBackup            Skip backing up existing profile
+  -InstallTerminalIcons  Install Terminal-Icons module
+  -InstallPSReadLine     Install/Update PSReadLine module
+  -NoPrompt              Install without prompting for optional modules
+  -ProfileSource <path>  Specify custom profile.ps1 path
+  -Help                  Show this help message
+
+Examples:
+  .\install-profile.ps1
+  .\install-profile.ps1 -NoPrompt -InstallTerminalIcons
+  .\install-profile.ps1 -SkipOhMyPosh -SkipBackup
+"@ -ForegroundColor Cyan
+    exit 0
+}
+
 Write-Host "Installing PowerShell Profile..." -ForegroundColor Cyan
 
 # Get the directory where this script is located
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$sourceProfile = Join-Path $scriptDir "profile.ps1"
+
+# Determine source profile path
+if ($ProfileSource) {
+    $sourceProfile = $ProfileSource
+} else {
+    $sourceProfile = Join-Path $scriptDir "profile.ps1"
+}
 
 # Check if source profile exists
 if (-not (Test-Path $sourceProfile)) {
-    Write-Host "Error: profile.ps1 not found in $scriptDir" -ForegroundColor Red
+    Write-Host "Error: profile.ps1 not found at $sourceProfile" -ForegroundColor Red
     exit 1
 }
 
@@ -25,10 +65,12 @@ if (-not (Test-Path $profileDir)) {
 }
 
 # Backup existing profile if it exists
-if (Test-Path $profilePath) {
+if ((Test-Path $profilePath) -and -not $SkipBackup) {
     $backupPath = "$profilePath.backup.$(Get-Date -Format 'yyyyMMdd-HHmmss')"
     Write-Host "Backing up existing profile to: $backupPath" -ForegroundColor Yellow
     Copy-Item $profilePath $backupPath
+} elseif ((Test-Path $profilePath) -and $SkipBackup) {
+    Write-Host "Skipping backup (as requested)" -ForegroundColor Yellow
 }
 
 # Copy profile
@@ -43,28 +85,44 @@ try {
 } catch {
     Write-Host "Warning: Could not set execution policy. You may need to run this as Administrator." -ForegroundColor Yellow
 }
-
-# Install Oh-My-Posh
-Write-Host "`nInstalling Oh-My-Posh..." -ForegroundColor Yellow
-if (Get-Command winget -ErrorAction SilentlyContinue) {
-    winget install JanDeLobbeleer.OhMyPosh -s winget
+if (-not $SkipOhMyPosh) {
+    Write-Host "`nInstalling Oh-My-Posh..." -ForegroundColor Yellow
+    if (Get-Command winget -ErrorAction SilentlyContinue) {
+        winget install JanDeLobbeleer.OhMyPosh -s winget
+    } else {
+        Write-Host "winget not found. Installing via PowerShell module..." -ForegroundColor Yellow
+        Install-Module oh-my-posh -Scope CurrentUser -Force
+    }
 } else {
+    Write-Host "`nSkipping Oh-My-Posh installation (as requested)" -ForegroundColor Yellow
     Write-Host "winget not found. Installing via PowerShell module..." -ForegroundColor Yellow
-    Install-Module oh-my-posh -Scope CurrentUser -Force
-}
-
-# Optional: Install Terminal-Icons
-Write-Host "`nDo you want to install Terminal-Icons module? (Y/N)" -ForegroundColor Cyan
-$response = Read-Host
-if ($response -eq 'Y' -or $response -eq 'y') {
-    Write-Host "Installing Terminal-Icons..." -ForegroundColor Yellow
+if ($InstallTerminalIcons) {
+    Write-Host "`nInstalling Terminal-Icons..." -ForegroundColor Yellow
     Install-Module -Name Terminal-Icons -Repository PSGallery -Scope CurrentUser -Force
     Write-Host "Terminal-Icons installed" -ForegroundColor Green
+} elseif (-not $NoPrompt) {
+    Write-Host "`nDo you want to install Terminal-Icons module? (Y/N)" -ForegroundColor Cyan
+    $response = Read-Host
+    if ($response -eq 'Y' -or $response -eq 'y') {
+        Write-Host "Installing Terminal-Icons..." -ForegroundColor Yellow
+        Install-Module -Name Terminal-Icons -Repository PSGallery -Scope CurrentUser -Force
+        Write-Host "Terminal-Icons installed" -ForegroundColor Green
+    }
 }
 
 # Optional: Install PSReadLine
-Write-Host "`nDo you want to update PSReadLine module? (Y/N)" -ForegroundColor Cyan
-$response = Read-Host
+if ($InstallPSReadLine) {
+    Write-Host "`nInstalling PSReadLine..." -ForegroundColor Yellow
+    Install-Module -Name PSReadLine -Repository PSGallery -Scope CurrentUser -Force -AllowPrerelease
+    Write-Host "PSReadLine installed" -ForegroundColor Green
+} elseif (-not $NoPrompt) {
+    Write-Host "`nDo you want to update PSReadLine module? (Y/N)" -ForegroundColor Cyan
+    $response = Read-Host
+    if ($response -eq 'Y' -or $response -eq 'y') {
+        Write-Host "Installing PSReadLine..." -ForegroundColor Yellow
+        Install-Module -Name PSReadLine -Repository PSGallery -Scope CurrentUser -Force -AllowPrerelease
+        Write-Host "PSReadLine installed" -ForegroundColor Green
+    }
 if ($response -eq 'Y' -or $response -eq 'y') {
     Write-Host "Installing PSReadLine..." -ForegroundColor Yellow
     Install-Module -Name PSReadLine -Repository PSGallery -Scope CurrentUser -Force -AllowPrerelease
