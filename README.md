@@ -139,6 +139,11 @@ After the scripts finish, restart your terminal to see the changes.
   - Utilities (PowerToys, WhatsApp)
   - Acer-specific software (Care Center, Nitro Sense)
   - User-level apps (Spotify with Spicetify)
+- **PowerShell Profile** with Oh-My-Posh integration
+  - Automated installation script ([install-profile.ps1](windows/install-profile.ps1))
+  - Custom profile configuration ([profile.ps1](windows/profile.ps1))
+  - Optional Terminal-Icons and PSReadLine modules
+  - Unix-like aliases (pwd, etc.)
 
 ## 🛠️ Manual Installation
 
