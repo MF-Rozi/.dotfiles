@@ -169,6 +169,29 @@ cp ~/.dotfiles/oh-my-zsh/custom/themes/mf-rozi.zsh-theme ~/.oh-my-zsh/custom/the
   git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 ```
 
+### PowerShell Profile Setup (Windows)
+
+```powershell
+# Run in PowerShell (as Administrator recommended)
+cd ~/dotfiles/windows
+.\install-profile.ps1
+
+# Or with options:
+.\install-profile.ps1 -NoPrompt -InstallTerminalIcons -InstallPSReadLine
+
+# For help:
+.\install-profile.ps1 -Help
+```
+
+**Installation Options:**
+
+- `-SkipOhMyPosh`: Skip Oh-My-Posh installation
+- `-SkipBackup`: Skip backing up existing profile
+- `-InstallTerminalIcons`: Install Terminal-Icons module
+- `-InstallPSReadLine`: Install/Update PSReadLine module
+- `-NoPrompt`: Install without prompting for optional modules
+- `-ProfileSource <path>`: Specify custom profile.ps1 path
+
 ## 🎯 Customization
 
 Feel free to fork this repository and customize it to your needs:
