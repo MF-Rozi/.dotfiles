@@ -226,6 +226,14 @@ SPACESHIP_PROMPT_ORDER=(
 )
 ```
 
+### Theme Management
+
+The repository includes multiple theme files for reference:
+
+- [`mf-rozi.zsh-theme`](oh-my-zsh/custom/themes/mf-rozi.zsh-theme) - Current active theme
+- [`mf-rozi-backup-before-clearing-up.zsh-theme`](oh-my-zsh/custom/themes/mf-rozi-backup-before-clearing-up.zsh-theme) - Previous version backup
+- These backup files are kept for version history and easy rollback
+
 ## 📝 Planned Enhancements
 
 - [ ] Tmux configuration
