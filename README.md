@@ -52,7 +52,7 @@ After the scripts finish, restart your terminal to see the changes.
 ## 📁 Repository Structure
 
 ```
-.dotfiles/
+dotfiles/
 ├── README.md                              # This file
 ├── install.sh                             # Master installation script
 ├── zsh/
@@ -60,7 +60,10 @@ After the scripts finish, restart your terminal to see the changes.
 ├── oh-my-zsh/
 │   └── custom/
 │       └── themes/
-│           └── mf-rozi.zsh-theme         # Custom theme with git info, RAM usage, and timing
+│           ├── mf-rozi.zsh-theme         # Custom theme with git info, RAM usage, and timing
+│           ├── mf-rozi-backup-before-clearing-up.zsh-theme  # Backup of previous theme version
+│           ├── mf-rozi copy.zsh-theme    # Copy of custom theme
+│           └── example.zsh-theme         # Example theme from Oh My Zsh
 ├── dnscrypt-proxy/                        # DNSCrypt-Proxy configuration files
 │   ├── dnscrypt-proxy.toml               # Main configuration
 │   ├── allowed-ips.txt                   # IP whitelist
@@ -78,9 +81,10 @@ After the scripts finish, restart your terminal to see the changes.
 │   └── dev-environment-setup.sh          # Development environment setup
 ├── shortcuts/
 │   └── shortcuts.md                      # Quick reference commands and shortcuts
-└── docs/
+└── windows/
     ├── Setup-Windows-winget.txt          # Windows application list (winget)
-    └── setup-windows.ps1                 # Windows automated setup script
+    ├── install-profile.ps1               # PowerShell profile installation script
+    └── profile.ps1                       # PowerShell profile configuration
 ```
 
 ## 🎨 Features
