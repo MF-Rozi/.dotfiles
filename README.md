@@ -254,6 +254,7 @@ The repository includes multiple theme files for reference:
 - ✅ Spaceship Prompt integration
 - ✅ DNSCrypt-Proxy configuration
 - ✅ Windows setup automation
+- ✅ PowerShell profile with Oh-My-Posh
 - ✅ Port-specific DNS routing
 - ✅ System-specific installation scripts
 - ✅ ASDF version manager setup
