@@ -306,6 +306,13 @@ yay -S nerd-fonts-fira-code
 yay -S nerd-fonts-hack
 ```
 
+**Windows:**
+Download and install from [Nerd Fonts](https://www.nerdfonts.com/):
+
+- JetBrains Mono Nerd Font
+- Fira Code Nerd Font
+- Cascadia Code (built-in with Windows Terminal)
+
 ### Quick Commands
 
 Check out the `shortcuts/shortcuts.md` file for a list of useful commands and shortcuts to enhance your productivity.
