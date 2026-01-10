@@ -61,9 +61,6 @@ dotfiles/
 │   └── custom/
 │       └── themes/
 │           ├── mf-rozi.zsh-theme         # Custom theme with git info, RAM usage, and timing
-│           ├── mf-rozi-backup-before-clearing-up.zsh-theme  # Backup of previous theme version
-│           ├── mf-rozi copy.zsh-theme    # Copy of custom theme
-│           └── example.zsh-theme         # Example theme from Oh My Zsh
 ├── dnscrypt-proxy/                        # DNSCrypt-Proxy configuration files
 │   ├── dnscrypt-proxy.toml               # Main configuration
 │   ├── allowed-ips.txt                   # IP whitelist
