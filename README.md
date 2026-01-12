@@ -313,5 +313,3 @@ Download and install from [Nerd Fonts](https://www.nerdfonts.com/):
 ### Quick Commands
 
 Check out the `shortcuts/shortcuts.md` file for a list of useful commands and shortcuts to enhance your productivity.
-
-**Happy coding!** 🚀
