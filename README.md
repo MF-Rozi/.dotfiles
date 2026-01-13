@@ -313,3 +313,22 @@ Download and install from [Nerd Fonts](https://www.nerdfonts.com/):
 ### Quick Commands
 
 Check out the `shortcuts/shortcuts.md` file for a list of useful commands and shortcuts to enhance your productivity.
+
+## 📚 References
+
+- [Oh My Zsh](https://ohmyz.sh/)
+- [Spaceship Prompt](https://spaceship-prompt.sh/)
+- [DNSCrypt-Proxy](https://dnscrypt.info/)
+- [ASDF Version Manager](https://asdf-vm.com/)
+- [PowerShell](https://docs.microsoft.com/en-us/powershell/)
+- [Oh-My-Posh](https://ohmyposh.dev/)
+- [Nerd Fonts](https://www.nerdfonts.com/)
+- [Winget](https://github.com/microsoft/winget-cli)
+- [Iptables](https://netfilter.org/projects/iptables/index.html)
+- [Arch Linux Wiki](https://wiki.archlinux.org/)
+- [Zsh Users](https://zsh-users.github.io/)
+- [Git](https://git-scm.com/)
+- [PowerToys](https://docs.microsoft.com/en-us/powertoys/)
+- [Spicetify](https://spicetify.app/)
+- [Windows Terminal](https://aka.ms/terminal)
+- [VS Code](https://code.visualstudio.com/)
