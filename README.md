@@ -145,6 +145,10 @@ dotfiles/
   - Custom profile configuration ([profile.ps1](windows/profile.ps1))
   - Optional Terminal-Icons and PSReadLine modules
   - Unix-like aliases (pwd, etc.)
+  - **mcconsole** function for Minecraft server SSH access
+    - Securely prompts for SSH password
+    - Connects to remote server and attaches to screen session
+    - Requires PuTTY tools (plink)
 
 ## 🛠️ Manual Installation
 
