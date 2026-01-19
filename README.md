@@ -121,7 +121,6 @@ dotfiles/
   - DNS cloaking and forwarding rules
   - Systemd integration for Arch Linux
 - **Port-specific DNS routing** for applications like Minecraft
-
   - Route traffic from specific ports to Cloudflare DNS
   - Iptables-based packet marking and routing
   - Persistent rules across reboots
@@ -149,6 +148,11 @@ dotfiles/
     - Securely prompts for SSH password
     - Connects to remote server and attaches to screen session
     - Requires PuTTY tools (plink)
+    - **wingetupgrade** function for automated Windows package updates
+    - Automatically elevates to admin privileges if needed
+    - Upgrades all winget packages except those in ignore list
+    - Excludes: Laragon, Discord, YogaDNS, Spicetify
+    - Silent installation with automatic agreement acceptance
 
 ## 🛠️ Manual Installation
 
