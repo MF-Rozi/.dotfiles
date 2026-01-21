@@ -9,9 +9,27 @@ Set-Alias -Name pwd -Value Get-Location
 
 # Connect to Minecraft Console
 Function mcconsole(){
-	$passwordencrypt = Read-Host –AsSecureString -Prompt 'Input the Password'
-	$password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($passwordencrypt))
-	plink -t -ssh mfrozi@mc.mfrozi.xyz -pw $password screen -x mcserver
+	try {
+        $passwordencrypt = Read-Host -AsSecureString -Prompt 'Input the Password'
+        $password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($passwordencrypt))
+        
+        # Check if plink is available
+        if (-not (Get-Command plink -ErrorAction SilentlyContinue)) {
+            Write-Error "plink not found. Please install PuTTY tools."
+            return
+        }
+        
+        plink -t -ssh mfrozi@mc.mfrozi.xyz -pw $password screen -x mcserver
+    }
+    catch {
+        Write-Error "Failed to connect: $_"
+    }
+    finally {
+        # Clear password from memory
+        if ($password) { 
+            Remove-Variable password -ErrorAction SilentlyContinue
+        }
+    }
 }
 # Winget Upgrade with Admin Privileges
 Function wingetupgrade(){
