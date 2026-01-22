@@ -148,6 +148,8 @@ dotfiles/
     - Securely prompts for SSH password
     - Connects to remote server and attaches to screen session
     - Requires PuTTY tools (plink)
+    - Automatic password cleanup from memory after use
+    - Error handling with graceful fallbacks
     - **wingetupgrade** function for automated Windows package updates
     - Automatically elevates to admin privileges if needed
     - Upgrades all winget packages except those in ignore list
