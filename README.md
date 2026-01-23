@@ -155,6 +155,9 @@ dotfiles/
     - Upgrades all winget packages except those in ignore list
     - Excludes: Laragon, Discord, YogaDNS, Spicetify
     - Silent installation with automatic agreement acceptance
+    - Duplicate package handling
+    - Success/failure tracking with summary report
+    - Colored output with visual indicators (✓, ✗, •)
 
 ## 🛠️ Manual Installation
 
