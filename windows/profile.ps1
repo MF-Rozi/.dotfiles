@@ -8,27 +8,49 @@ $env:EDITOR = "code"
 Set-Alias -Name pwd -Value Get-Location
 
 # Connect to Minecraft Console
-Function mcconsole(){
-	try {
-        $passwordencrypt = Read-Host -AsSecureString -Prompt 'Input the Password'
-        $password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($passwordencrypt))
+Function mcconsole {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]$Server = "mc.mfrozi.xyz",
         
-        # Check if plink is available
+        [Parameter()]
+        [string]$User = "mfrozi",
+        
+        [Parameter()]
+        [string]$ScreenSession = "mcserver"
+    )
+    
+    try {
+        # Check if plink is available first
         if (-not (Get-Command plink -ErrorAction SilentlyContinue)) {
-            Write-Error "plink not found. Please install PuTTY tools."
+            Write-Error "plink not found. Please install PuTTY tools from: https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html"
             return
         }
         
-        plink -t -ssh mfrozi@mc.mfrozi.xyz -pw $password screen -x mcserver
+        $passwordencrypt = Read-Host -AsSecureString -Prompt "Enter SSH password for $User@${Server}"
+        $password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($passwordencrypt))
+        
+        Write-Host "Connecting to $Server..." -ForegroundColor Cyan
+        plink -t -ssh "$User@$Server" -pw $password screen -x $ScreenSession
+        
+        if ($LASTEXITCODE -ne 0) {
+            Write-Warning "Connection failed with exit code: $LASTEXITCODE"
+        }
     }
     catch {
         Write-Error "Failed to connect: $_"
     }
     finally {
-        # Clear password from memory
+        # Securely clear password from memory
         if ($password) { 
+            $password = $null
             Remove-Variable password -ErrorAction SilentlyContinue
         }
+        if ($passwordencrypt) {
+            $passwordencrypt.Dispose()
+        }
+        [System.GC]::Collect()
     }
 }
 ## Winget Upgrade with Admin Privileges
