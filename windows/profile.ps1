@@ -31,76 +31,95 @@ Function mcconsole(){
         }
     }
 }
-# Winget Upgrade with Admin Privileges
-Function wingetupgrade(){
-
-  # --- Administrator Check ---
+## Winget Upgrade with Admin Privileges
+Function wingetupgrade() {
+    # --- Administrator Check ---
     $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
 
-  if (-not $isAdmin) {
-    # Not Admin: Re-launch in a new, elevated Windows Terminal window
-    Write-Warning "Administrator privileges required. Launching in an elevated Windows Terminal..."
+    if (-not $isAdmin) {
+        Write-Warning "Administrator privileges required. Launching in an elevated Windows Terminal..."
         
-    # Define the command to run in the new terminal.
-    # Using single quotes around $PROFILE handles potential spaces in the path.
-    $commandToRun = ". '$PROFILE'; wingetupgrade"
+        $commandToRun = ". '$PROFILE'; wingetupgrade"
+        $bytes = [System.Text.Encoding]::Unicode.GetBytes($commandToRun)
+        $encodedCommand = [Convert]::ToBase64String($bytes)
         
-    # Convert the command to a Base64 string to avoid any command-line parsing errors.
-    $bytes = [System.Text.Encoding]::Unicode.GetBytes($commandToRun)
-    $encodedCommand = [Convert]::ToBase64String($bytes)
-        
-    # Launch the new terminal using the -EncodedCommand parameter
-     Start-Process wt -Verb RunAs -ArgumentList "-- powershell -NoExit -EncodedCommand $encodedCommand"
-        
-    return # Stop the current non-admin function
-  }
+        Start-Process wt -Verb RunAs -ArgumentList "-- powershell -NoExit -EncodedCommand $encodedCommand"
+        return
+    }
     
-  # --- Main Logic (runs only when admin) ---
-  Write-Host "Running with Administrator privileges." -ForegroundColor Green
+    # --- Main Logic ---
+    Write-Host "Running with Administrator privileges." -ForegroundColor Green
 
+    # Check if winget is available
+    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+        Write-Error "winget not found. Please install App Installer from Microsoft Store."
+        return
+    }
 
-  $ignorelist = @(
-    "LeNgocKhoa.Laragon",
-    "Discord.Discord",
-    "Initex.YogaDNS",
-    "Spicetify.Spicetify" #this needed to run on non elevated mode
-  )
+    $ignorelist = @(
+        "LeNgocKhoa.Laragon",
+        "Discord.Discord",
+        "Initex.YogaDNS",
+        "Spicetify.Spicetify"
+    )
 
-  try {
-      $updatelist = winget upgrade
-  } catch {
-    Write-Error "Failed to run 'winget upgrade'. Make sure winget is installed and working."
-    return
-  }
-  $idlist = @()
+    try {
+        Write-Host "Checking for updates..." -ForegroundColor Cyan
+        $updatelist = winget upgrade 2>&1
+    }
+    catch {
+        Write-Error "Failed to run 'winget upgrade': $_"
+        return
+    }
 
-  $idPattern = '[A-Za-z][A-Za-z0-9-]*\.[A-Za-z0-9\.-]+'
+    $idlist = @()
+    $idPattern = '[A-Za-z][A-Za-z0-9-]*\.[A-Za-z0-9\.-]+'
 
-  foreach ($line in $updatelist) {
-
-    $allMatches = $line | Select-String -Pattern $idPattern -AllMatches
-      if($allMatches){
-        $id = $allMatches.Matches[-1].Value
-        
-        if($id -in $ignorelist){
-          continue
+    foreach ($line in $updatelist) {
+        $allMatches = $line | Select-String -Pattern $idPattern -AllMatches
+        if ($allMatches) {
+            $id = $allMatches.Matches[-1].Value
+            
+            if ($id -notin $ignorelist) {
+                $idlist += $id
+            }
         }
-        $idlist += $id
-      }
-  }
+    }
 
-  if ($idlist.Count -eq 0) {
-    Write-Host "No new software updates to install."
-    return
-  }
+    # Remove duplicates
+    $idlist = $idlist | Select-Object -Unique
 
-  Write-Host "--- The following packages will be upgraded ---"
-  $idList
+    if ($idlist.Count -eq 0) {
+        Write-Host "✓ No new software updates to install." -ForegroundColor Green
+        return
+    }
 
-  Write-Host "--- Upgrading ---"
-  foreach ($id in $idlist) {
-    Write-Host "Upgrading $id..."
-        winget upgrade --id $id --accept-package-agreements --accept-source-agreements --silent
-  }
-  Write-Host "--- All upgrades complete! ---" -ForegroundColor Green
+    Write-Host "`n--- The following $($idlist.Count) package(s) will be upgraded ---" -ForegroundColor Yellow
+    $idlist | ForEach-Object { Write-Host "  • $_" }
+
+    Write-Host "`n--- Starting Upgrades ---" -ForegroundColor Cyan
+    $successCount = 0
+    $failCount = 0
+
+    foreach ($id in $idlist) {
+        Write-Host "`nUpgrading $id..." -ForegroundColor Cyan
+        
+        $result = winget upgrade --id $id --accept-package-agreements --accept-source-agreements --silent 2>&1
+        
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "  ✓ $id upgraded successfully" -ForegroundColor Green
+            $successCount++
+        }
+        else {
+            Write-Warning "  ✗ Failed to upgrade $id"
+            $failCount++
+        }
+    }
+
+    Write-Host "`n--- Upgrade Summary ---" -ForegroundColor Cyan
+    Write-Host "  Success: $successCount" -ForegroundColor Green
+    if ($failCount -gt 0) {
+        Write-Host "  Failed: $failCount" -ForegroundColor Red
+    }
+    Write-Host "--- All upgrades complete! ---" -ForegroundColor Green
 }
