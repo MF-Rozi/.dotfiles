@@ -145,12 +145,16 @@ dotfiles/
   - Optional Terminal-Icons and PSReadLine modules
   - Unix-like aliases (pwd, etc.)
   - **mcconsole** function for Minecraft server SSH access
+    - Configurable parameters: `-Server`, `-User`, `-ScreenSession`
+    - Defaults: `mc.mfrozi.xyz`, `mfrozi`, `mcserver`
     - Securely prompts for SSH password
     - Connects to remote server and attaches to screen session
-    - Requires PuTTY tools (plink)
+    - Requires PuTTY tools (plink) with installation link
     - Automatic password cleanup from memory after use
+    - Exit code validation with error reporting
     - Error handling with graceful fallbacks
-    - **wingetupgrade** function for automated Windows package updates
+    - Supports `-Verbose` flag for detailed output
+  - **wingetupgrade** function for automated Windows package updates
     - Automatically elevates to admin privileges if needed
     - Upgrades all winget packages except those in ignore list
     - Excludes: Laragon, Discord, YogaDNS, Spicetify
