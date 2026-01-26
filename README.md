@@ -156,11 +156,16 @@ dotfiles/
     - Supports `-Verbose` flag for detailed output
   - **wingetupgrade** function for automated Windows package updates
     - Automatically elevates to admin privileges if needed
+    - Parameters: `-Force` (skip confirmation), `-Include` (add specific packages), `-SkipIgnoreList`
     - Upgrades all winget packages except those in ignore list
     - Excludes: Laragon, Discord, YogaDNS, Spicetify
+    - User confirmation prompt before upgrading (unless `-Force` is used)
     - Silent installation with automatic agreement acceptance
     - Duplicate package handling
+    - Progress indicator (1/5, 2/5, etc.)
+    - Tracks failed packages with detailed reporting
     - Success/failure tracking with summary report
+    - Automatic log file generation in temp folder
     - Colored output with visual indicators (✓, ✗, •)
 
 ## 🛠️ Manual Installation
