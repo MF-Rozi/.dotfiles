@@ -211,3 +211,24 @@ $(if ($failedPackages.Count -gt 0) { "Failed Packages:`n$($failedPackages -join 
     $logContent | Out-File -FilePath $logPath -Encoding UTF8
     Write-Host "`nLog saved to: $logPath" -ForegroundColor Gray
 }
+# Helper function to check for profile updates
+Function Update-Profile {
+    $profileUrl = "https://raw.githubusercontent.com/yourusername/dotfiles/main/windows/profile.ps1"
+    try {
+        $webProfile = Invoke-WebRequest -Uri $profileUrl -UseBasicParsing
+        if ($webProfile.Content -ne (Get-Content $PROFILE -Raw)) {
+            Write-Host "Profile update available!" -ForegroundColor Yellow
+            $update = Read-Host "Update profile? (Y/N)"
+            if ($update -eq 'Y' -or $update -eq 'y') {
+                $webProfile.Content | Set-Content $PROFILE
+                Write-Host "Profile updated. Please restart PowerShell." -ForegroundColor Green
+            }
+        }
+        else {
+            Write-Host "Profile is up to date." -ForegroundColor Green
+        }
+    }
+    catch {
+        Write-Warning "Failed to check for updates: $_"
+    }
+}
