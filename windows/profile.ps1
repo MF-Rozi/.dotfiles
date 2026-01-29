@@ -213,7 +213,7 @@ $(if ($failedPackages.Count -gt 0) { "Failed Packages:`n$($failedPackages -join 
 }
 # Helper function to check for profile updates
 Function Update-Profile {
-    $profileUrl = "https://raw.githubusercontent.com/yourusername/dotfiles/main/windows/profile.ps1"
+    $profileUrl = "https://raw.githubusercontent.com/MF-Rozi/dotfiles/main/windows/profile.ps1"
     try {
         $webProfile = Invoke-WebRequest -Uri $profileUrl -UseBasicParsing
         if ($webProfile.Content -ne (Get-Content $PROFILE -Raw)) {
