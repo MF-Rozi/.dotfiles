@@ -167,6 +167,13 @@ dotfiles/
     - Success/failure tracking with summary report
     - Automatic log file generation in temp folder
     - Colored output with visual indicators (✓, ✗, •)
+  - **Update-Profile** function for profile update checking
+    - Checks GitHub repository for newer profile version
+    - Compares remote profile with local profile
+    - Prompts for confirmation before updating
+    - Automatic profile replacement if update accepted
+    - Requires PowerShell restart after update
+    - URL: https://raw.githubusercontent.com/MF-Rozi/dotfiles/main/windows/profile.ps1
 
 ## 🛠️ Manual Installation
 
