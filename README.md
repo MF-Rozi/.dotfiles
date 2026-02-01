@@ -173,7 +173,7 @@ dotfiles/
     - Prompts for confirmation before updating
     - Automatic profile replacement if update accepted
     - Requires PowerShell restart after update
-    - URL: https://raw.githubusercontent.com/MF-Rozi/dotfiles/main/windows/profile.ps1
+    - URL: https://raw.githubusercontent.com/MF-Rozi/.dotfiles/main/windows/profile.ps1
 
 ## 🛠️ Manual Installation
 
