@@ -1,5 +1,9 @@
 # Oh-My-Posh prompt theme
-oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\jandedobbeleer.omp.json" | Invoke-Expression
+if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
+    oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\jandedobbeleer.omp.json" | Invoke-Expression
+} else {
+    Write-Warning "Oh-My-Posh not found. Install with: winget install JanDeDobbeleer.OhMyPosh"
+}
 
 # Environment variables
 $env:EDITOR = "code"
