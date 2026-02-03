@@ -1,7 +1,21 @@
 # Oh-My-Posh prompt theme
 if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
-    oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\jandedobbeleer.omp.json" | Invoke-Expression
-} else {
+    $themeFile = if ($env:POSH_THEMES_PATH) {
+        Join-Path $env:POSH_THEMES_PATH "jandedobbeleer.omp.json"
+    } else {
+        $null
+    }
+
+    if ($themeFile -and (Test-Path $themeFile)) {
+        oh-my-posh init pwsh --config $themeFile | Invoke-Expression
+    }
+    else {
+        # Fall back to the built-in theme
+        Write-Warning "Theme file not found at '$themeFile'. Using built-in default."
+        oh-my-posh init pwsh | Invoke-Expression
+    }
+}
+else {
     Write-Warning "Oh-My-Posh not found. Install with: winget install JanDeDobbeleer.OhMyPosh"
 }
 
