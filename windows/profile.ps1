@@ -21,9 +21,22 @@ else {
 
 # Environment variables
 $env:EDITOR = "code"
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 # Unix-like aliases
-Set-Alias -Name pwd -Value Get-Location
+Set-Alias -Name pwd  -Value Get-Location
+Set-Alias -Name ll   -Value Get-ChildItem
+Set-Alias -Name which -Value Get-Command
+
+# PSReadLine enhancements
+if (Get-Module -ListAvailable PSReadLine) {
+    Import-Module PSReadLine -ErrorAction SilentlyContinue
+    Set-PSReadLineOption -PredictionSource History
+    Set-PSReadLineOption -PredictionViewStyle ListView
+    Set-PSReadLineOption -HistorySaveStyle SaveIncrementally
+    Set-PSReadLineOption -MaximumHistoryCount 10240
+    Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
+}
 
 # Connect to Minecraft Console
 Function mcconsole {
