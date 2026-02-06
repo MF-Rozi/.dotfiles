@@ -143,7 +143,12 @@ dotfiles/
   - Automated installation script ([install-profile.ps1](windows/install-profile.ps1))
   - Custom profile configuration ([profile.ps1](windows/profile.ps1))
   - Optional Terminal-Icons and PSReadLine modules
-  - Unix-like aliases (pwd, etc.)
+  - Unix-like aliases (pwd, ll, which)
+  - **PSReadLine enhancements** pre-configured:
+    - History-based prediction with ListView style
+    - Incremental history save (up to 10240 entries)
+    - Tab completion with menu selection
+  - UTF-8 console output encoding
   - **mcconsole** function for Minecraft server SSH access
     - Configurable parameters: `-Server`, `-User`, `-ScreenSession`
     - Defaults: `mc.mfrozi.xyz`, `mfrozi`, `mcserver`
