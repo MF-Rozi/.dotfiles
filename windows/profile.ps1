@@ -42,46 +42,57 @@ if (Get-Module -ListAvailable PSReadLine) {
 Function mcconsole {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [string]$Server = "mc.mfrozi.xyz",
-        
-        [Parameter()]
-        [string]$User = "mfrozi",
-        
-        [Parameter()]
-        [string]$ScreenSession = "mcserver"
+        [Parameter()] [string]$Server = "mc.mfrozi.xyz",
+        [Parameter()] [string]$User = "mfrozi",
+        [Parameter()] [string]$ScreenSession = "mcserver"
     )
-    
+
     try {
-        # Check if plink is available first
-        if (-not (Get-Command plink -ErrorAction SilentlyContinue)) {
-            Write-Error "plink not found. Please install PuTTY tools from: https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html"
+        # Prefer native OpenSSH (key-based, no password prompt if agent is configured)
+        if (Get-Command ssh -ErrorAction SilentlyContinue) {
+            Write-Host "Connecting via OpenSSH to $User@$Server..." -ForegroundColor Cyan
+            & ssh -t "$User@$Server" "screen -x $ScreenSession"
+            if ($LASTEXITCODE -ne 0) {
+                Write-Warning "ssh exited with code $LASTEXITCODE"
+            }
             return
         }
-        
-        $passwordencrypt = Read-Host -AsSecureString -Prompt "Enter SSH password for $User@${Server}"
-        $password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($passwordencrypt))
-        
-        Write-Host "Connecting to $Server..." -ForegroundColor Cyan
-        plink -t -ssh "$User@$Server" -pw $password screen -x $ScreenSession
-        
+
+        # Fallback to plink
+        if (-not (Get-Command plink -ErrorAction SilentlyContinue)) {
+            Write-Error "Neither ssh nor plink found. Install OpenSSH (Settings → Optional Features) or PuTTY."
+            return
+        }
+
+        Write-Warning "OpenSSH not found — falling back to plink. Consider setting up SSH keys."
+
+        $useKey = Read-Host "Use Pageant key agent? (Y/N)"
+        if ($useKey -in @('Y', 'y')) {
+            plink -t -ssh "$User@$Server" screen -x $ScreenSession
+        }
+        else {
+            $securePass = Read-Host -AsSecureString -Prompt "Enter SSH password for $User@${Server}"
+            $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($securePass)
+            try {
+                $plainPass = [Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
+                plink -t -ssh "$User@$Server" -pw $plainPass screen -x $ScreenSession
+            }
+            finally {
+                # Zero out the BSTR as soon as possible
+                [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
+                $plainPass = $null
+                Remove-Variable plainPass -ErrorAction SilentlyContinue
+                $securePass.Dispose()
+                [GC]::Collect()
+            }
+        }
+
         if ($LASTEXITCODE -ne 0) {
             Write-Warning "Connection failed with exit code: $LASTEXITCODE"
         }
     }
     catch {
         Write-Error "Failed to connect: $_"
-    }
-    finally {
-        # Securely clear password from memory
-        if ($password) { 
-            $password = $null
-            Remove-Variable password -ErrorAction SilentlyContinue
-        }
-        if ($passwordencrypt) {
-            $passwordencrypt.Dispose()
-        }
-        [System.GC]::Collect()
     }
 }
 # Winget Upgrade with Admin Privileges
