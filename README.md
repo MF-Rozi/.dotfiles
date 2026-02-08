@@ -152,10 +152,10 @@ dotfiles/
   - **mcconsole** function for Minecraft server SSH access
     - Configurable parameters: `-Server`, `-User`, `-ScreenSession`
     - Defaults: `mc.mfrozi.xyz`, `mfrozi`, `mcserver`
-    - Securely prompts for SSH password
-    - Connects to remote server and attaches to screen session
-    - Requires PuTTY tools (plink) with installation link
-    - Automatic password cleanup from memory after use
+    - Prefers native OpenSSH with key-based authentication
+    - Falls back to PuTTY `plink` if `ssh` is not available
+    - Pageant key agent support (avoids password prompts entirely)
+    - Secure password handling with `ZeroFreeBSTR` memory cleanup
     - Exit code validation with error reporting
     - Error handling with graceful fallbacks
     - Supports `-Verbose` flag for detailed output
