@@ -99,82 +99,90 @@ Function mcconsole {
 Function wingetupgrade {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [switch]$Force,
-        
-        [Parameter()]
-        [string[]]$Include,
-        
-        [Parameter()]
-        [switch]$SkipIgnoreList
+        [Parameter()] [switch]$Force,
+        [Parameter()] [string[]]$Include,
+        [Parameter()] [switch]$SkipIgnoreList,
+        [Parameter()] [switch]$DryRun
     )
-    
+
     # --- Administrator Check ---
-    $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
+    $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(
+        [Security.Principal.WindowsBuiltInRole]::Administrator)
 
     if (-not $isAdmin) {
-        Write-Warning "Administrator privileges required. Launching in an elevated Windows Terminal..."
-        
-        $paramString = if ($Force) { "-Force" } else { "" }
+        Write-Warning "Administrator privileges required. Launching elevated…"
+
+        # Reconstruct all parameters for the elevated session
+        $paramParts = @()
+        if ($Force)          { $paramParts += '-Force' }
+        if ($SkipIgnoreList) { $paramParts += '-SkipIgnoreList' }
+        if ($DryRun)         { $paramParts += '-DryRun' }
+        if ($Include)        { $paramParts += "-Include @('$($Include -join "','")')" }
+        $paramString = $paramParts -join ' '
+
         $commandToRun = ". '$PROFILE'; wingetupgrade $paramString"
-        $bytes = [System.Text.Encoding]::Unicode.GetBytes($commandToRun)
+        $bytes = [Text.Encoding]::Unicode.GetBytes($commandToRun)
         $encodedCommand = [Convert]::ToBase64String($bytes)
-        
-        Start-Process wt -Verb RunAs -ArgumentList "-- powershell -NoExit -EncodedCommand $encodedCommand"
+
+        # Use pwsh (PS 7) — change to 'powershell' if you only have 5.1
+        Start-Process wt -Verb RunAs -ArgumentList "-- pwsh -NoExit -EncodedCommand $encodedCommand"
         return
     }
-    
-    # --- Main Logic ---
+
     Write-Host "Running with Administrator privileges." -ForegroundColor Green
 
-    # Check if winget is available
     if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-        Write-Error "winget not found. Please install App Installer from Microsoft Store."
+        Write-Error "winget not found. Install App Installer from the Microsoft Store."
         return
     }
 
     $ignorelist = @(
-        "LeNgocKhoa.Laragon",
-        "Discord.Discord",
-        "Initex.YogaDNS",
+        "LeNgocKhoa.Laragon"
+        "Discord.Discord"
+        "Initex.YogaDNS"
         "Spicetify.Spicetify"
     )
 
+    Write-Host "Checking for updates…" -ForegroundColor Cyan
+
+    # --- Parse available upgrades ---
+    $idlist = [Collections.Generic.List[string]]::new()
+
     try {
-        Write-Host "Checking for updates..." -ForegroundColor Cyan
-        $updatelist = winget upgrade --include-unknown 2>&1
+        # Attempt structured JSON output first (winget ≥ 1.6)
+        $jsonOutput = & winget upgrade --include-unknown --accept-source-agreements --output json 2>$null
+        if ($jsonOutput) {
+            $items = $jsonOutput | ConvertFrom-Json
+            foreach ($item in $items) {
+                $id = $item.PackageIdentifier
+                if (-not $SkipIgnoreList -and $id -in $ignorelist) { continue }
+                if ($id -and $id -notin $idlist) { $idlist.Add($id) }
+            }
+        }
+        else { throw "empty json" }
     }
     catch {
-        Write-Error "Failed to run 'winget upgrade': $_"
-        return
-    }
+        # Fallback: text parsing
+        $updatelist = winget upgrade --include-unknown 2>&1
 
-    # Parse package IDs from output
-    $idlist = [System.Collections.Generic.List[string]]::new()
-    $idPattern = '(?<id>[A-Za-z][A-Za-z0-9-]*\.[A-Za-z0-9\.-]+)'
+        # Find header line to know where data starts
+        $headerIndex = ($updatelist | ForEach-Object { $_.ToString() } |
+            Select-String -Pattern '^-{3,}' |
+            Select-Object -First 1).LineNumber
 
-    foreach ($line in $updatelist) {
-        if ($line -match $idPattern) {
-            $id = $Matches['id']
-            
-            # Skip if in ignore list (unless SkipIgnoreList is set)
-            if (-not $SkipIgnoreList -and $id -in $ignorelist) {
-                continue
-            }
-            
-            # Add if not already in list
-            if ($id -notin $idlist) {
-                $idlist.Add($id)
+        $idPattern = '(?<id>[A-Za-z][A-Za-z0-9-]*\.[A-Za-z0-9\.\-]+)'
+        foreach ($line in $updatelist[($headerIndex)..($updatelist.Count - 1)]) {
+            if ($line -match $idPattern) {
+                $id = $Matches['id']
+                if (-not $SkipIgnoreList -and $id -in $ignorelist) { continue }
+                if ($id -notin $idlist) { $idlist.Add($id) }
             }
         }
     }
 
-    # Add specific packages if requested
     if ($Include) {
         foreach ($pkg in $Include) {
-            if ($pkg -notin $idlist) {
-                $idlist.Add($pkg)
-            }
+            if ($pkg -notin $idlist) { $idlist.Add($pkg) }
         }
     }
 
@@ -183,75 +191,61 @@ Function wingetupgrade {
         return
     }
 
-    Write-Host "`n--- The following $($idlist.Count) package(s) will be upgraded ---" -ForegroundColor Yellow
+    Write-Host "`n--- $($idlist.Count) package(s) will be upgraded ---" -ForegroundColor Yellow
     $idlist | ForEach-Object { Write-Host "  • $_" -ForegroundColor White }
 
-    # Confirmation unless -Force is used
+    if ($DryRun) {
+        Write-Host "`n[DRY RUN] No changes made." -ForegroundColor Magenta
+        return
+    }
+
     if (-not $Force) {
-        $confirm = Read-Host "`nProceed with upgrades? (Y/N)"
-        if ($confirm -ne 'Y' -and $confirm -ne 'y') {
-            Write-Host "Upgrade cancelled." -ForegroundColor Yellow
+        $confirm = Read-Host "`nProceed? (Y/N)"
+        if ($confirm -notin @('Y', 'y')) {
+            Write-Host "Cancelled." -ForegroundColor Yellow
             return
         }
     }
 
+    # --- Upgrade loop ---
     Write-Host "`n--- Starting Upgrades ---" -ForegroundColor Cyan
     $successCount = 0
-    $failCount = 0
-    $failedPackages = [System.Collections.Generic.List[string]]::new()
+    $failedPackages = [Collections.Generic.List[string]]::new()
 
-    foreach ($id in $idlist) {
-        Write-Host "`n[$($idlist.IndexOf($id) + 1)/$($idlist.Count)] Upgrading $id..." -ForegroundColor Cyan
-        
-        $upgradeArgs = @(
-            'upgrade'
-            '--id', $id
-            '--accept-package-agreements'
-            '--accept-source-agreements'
-            '--silent'
-        )
-        
-        $result = & winget @upgradeArgs 2>&1
-        
+    for ($i = 0; $i -lt $idlist.Count; $i++) {
+        $id = $idlist[$i]
+        Write-Host "`n[$($i + 1)/$($idlist.Count)] Upgrading $id…" -ForegroundColor Cyan
+
+        & winget upgrade --id $id --accept-package-agreements --accept-source-agreements --silent 2>&1 | Out-Null
+
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "  ✓ $id upgraded successfully" -ForegroundColor Green
+            Write-Host "  ✓ $id" -ForegroundColor Green
             $successCount++
         }
         else {
-            Write-Warning "  ✗ Failed to upgrade $id (Exit code: $LASTEXITCODE)"
-            $failCount++
+            Write-Warning "  ✗ $id (exit $LASTEXITCODE)"
             $failedPackages.Add($id)
         }
     }
 
-    # Summary
-    Write-Host "`n$('=' * 50)" -ForegroundColor Cyan
-    Write-Host "Upgrade Summary" -ForegroundColor Cyan
-    Write-Host "$('=' * 50)" -ForegroundColor Cyan
-    Write-Host "  Total packages: $($idlist.Count)" -ForegroundColor White
-    Write-Host "  ✓ Success: $successCount" -ForegroundColor Green
-    
+    # --- Summary ---
+    $failCount = $failedPackages.Count
+    Write-Host "`n$('═' * 50)" -ForegroundColor Cyan
+    Write-Host "  Total: $($idlist.Count)  ✓ $successCount  ✗ $failCount" -ForegroundColor White
     if ($failCount -gt 0) {
-        Write-Host "  ✗ Failed: $failCount" -ForegroundColor Red
-        Write-Host "`nFailed packages:" -ForegroundColor Yellow
-        $failedPackages | ForEach-Object { Write-Host "  • $_" -ForegroundColor Red }
+        $failedPackages | ForEach-Object { Write-Host "    • $_" -ForegroundColor Red }
     }
-    
-    Write-Host "$('=' * 50)" -ForegroundColor Cyan
-    
-    # Log to file
-    $logPath = "$env:TEMP\winget-upgrade-$(Get-Date -Format 'yyyyMMdd-HHmmss').log"
-    $logContent = @"
-Winget Upgrade Log - $(Get-Date)
-Total: $($idlist.Count) | Success: $successCount | Failed: $failCount
+    Write-Host "$('═' * 50)" -ForegroundColor Cyan
 
-Upgraded Packages:
+    # Log
+    $logPath = Join-Path $env:TEMP "winget-upgrade-$(Get-Date -Format 'yyyyMMdd-HHmmss').log"
+    @"
+Winget Upgrade — $(Get-Date)
+Total: $($idlist.Count) | OK: $successCount | Failed: $failCount
 $($idlist -join "`n")
-
-$(if ($failedPackages.Count -gt 0) { "Failed Packages:`n$($failedPackages -join "`n")" })
-"@
-    $logContent | Out-File -FilePath $logPath -Encoding UTF8
-    Write-Host "`nLog saved to: $logPath" -ForegroundColor Gray
+$(if ($failCount) { "`nFailed:`n$($failedPackages -join "`n")" })
+"@ | Set-Content $logPath -Encoding UTF8
+    Write-Host "Log: $logPath" -ForegroundColor Gray
 }
 # Helper function to check for profile updates
 Function Update-Profile {
