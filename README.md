@@ -161,7 +161,11 @@ dotfiles/
     - Supports `-Verbose` flag for detailed output
   - **wingetupgrade** function for automated Windows package updates
     - Automatically elevates to admin privileges if needed
-    - Parameters: `-Force` (skip confirmation), `-Include` (add specific packages), `-SkipIgnoreList`
+    - All parameters (`-Force`, `-Include`, `-SkipIgnoreList`, `-DryRun`) are forwarded when re-launching elevated
+    - Uses `pwsh` (PowerShell 7+) for elevated session instead of legacy `powershell`
+    - Parameters: `-Force` (skip confirmation), `-Include` (add specific packages), `-SkipIgnoreList`, `-DryRun` (preview without changes)
+    - Attempts structured JSON output from winget (≥ 1.6) for reliable parsing; falls back to text regex
+    - Text-mode parsing skips header lines to reduce false-positive package matches
     - Upgrades all winget packages except those in ignore list
     - Excludes: Laragon, Discord, YogaDNS, Spicetify
     - User confirmation prompt before upgrading (unless `-Force` is used)
