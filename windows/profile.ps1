@@ -249,19 +249,40 @@ $(if ($failCount) { "`nFailed:`n$($failedPackages -join "`n")" })
 }
 # Helper function to check for profile updates
 Function Update-Profile {
-    $profileUrl = "https://raw.githubusercontent.com/MF-Rozi/.dotfiles/main/windows/profile.ps1"
+    [CmdletBinding()]
+    param(
+        [string]$ProfileUrl = "https://raw.githubusercontent.com/MF-Rozi/.dotfiles/main/windows/profile.ps1"
+    )
+
     try {
-        $webProfile = Invoke-WebRequest -Uri $profileUrl -UseBasicParsing
-        if ($webProfile.Content -ne (Get-Content $PROFILE -Raw)) {
-            Write-Host "Profile update available!" -ForegroundColor Yellow
-            $update = Read-Host "Update profile? (Y/N)"
-            if ($update -eq 'Y' -or $update -eq 'y') {
-                $webProfile.Content | Set-Content $PROFILE
-                Write-Host "Profile updated. Please restart PowerShell." -ForegroundColor Green
-            }
-        }
-        else {
+        $webContent = Invoke-RestMethod -Uri $ProfileUrl -ErrorAction Stop
+
+        # Ensure $PROFILE file exists for comparison
+        $currentContent = if (Test-Path $PROFILE) {
+            Get-Content $PROFILE -Raw -Encoding UTF8
+        } else { "" }
+
+        # Normalize line endings for reliable comparison
+        $normalize = { param($s) $s.Trim() -replace '\r\n', "`n" }
+        $remoteNorm = & $normalize $webContent
+        $localNorm  = & $normalize $currentContent
+
+        if ($remoteNorm -eq $localNorm) {
             Write-Host "Profile is up to date." -ForegroundColor Green
+            return
+        }
+
+        Write-Host "Profile update available!" -ForegroundColor Yellow
+        $update = Read-Host "Update profile? (Y/N)"
+        if ($update -in @('Y', 'y')) {
+            # Back up current profile
+            if (Test-Path $PROFILE) {
+                $backupPath = "$PROFILE.bak-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+                Copy-Item $PROFILE $backupPath
+                Write-Host "Backup saved to: $backupPath" -ForegroundColor Gray
+            }
+            $webContent | Set-Content $PROFILE -Force -Encoding UTF8
+            Write-Host "Profile updated. Please restart PowerShell." -ForegroundColor Green
         }
     }
     catch {
