@@ -177,12 +177,15 @@ dotfiles/
     - Automatic log file generation in temp folder
     - Colored output with visual indicators (✓, ✗, •)
   - **Update-Profile** function for profile update checking
-    - Checks GitHub repository for newer profile version
-    - Compares remote profile with local profile
+    - Accepts custom `-ProfileUrl` parameter (defaults to GitHub repository)
+    - Uses `Invoke-RestMethod` for cleaner raw-string comparison
+    - Normalizes line endings (CRLF vs LF) before comparing local and remote profiles
+    - Creates a timestamped backup (`$PROFILE.bak-yyyyMMdd-HHmmss`) before overwriting
+    - Handles missing `$PROFILE` file gracefully (first-time setup)
+    - Writes updated profile with explicit UTF-8 encoding
     - Prompts for confirmation before updating
-    - Automatic profile replacement if update accepted
     - Requires PowerShell restart after update
-    - URL: https://raw.githubusercontent.com/MF-Rozi/.dotfiles/main/windows/profile.ps1
+    - Default URL: `https://raw.githubusercontent.com/MF-Rozi/.dotfiles/main/windows/profile.ps1`
 
 ## 🛠️ Manual Installation
 
