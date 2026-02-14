@@ -144,6 +144,7 @@ dotfiles/
   - Custom profile configuration ([profile.ps1](windows/profile.ps1))
   - Optional Terminal-Icons and PSReadLine modules
   - Unix-like aliases (pwd, ll, which)
+  - Graceful Oh-My-Posh theme loading with fallback to built-in default if theme file is missing
   - **PSReadLine enhancements** pre-configured:
     - History-based prediction with ListView style
     - Incremental history save (up to 10240 entries)
