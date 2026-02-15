@@ -374,3 +374,5 @@ Check out the `shortcuts/shortcuts.md` file for a list of useful commands and sh
 - [Spicetify](https://spicetify.app/)
 - [Windows Terminal](https://aka.ms/terminal)
 - [VS Code](https://code.visualstudio.com/)
+
+**Happy coding!** 🚀
