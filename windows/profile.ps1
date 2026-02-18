@@ -10,8 +10,7 @@ if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
         oh-my-posh init pwsh --config $themeFile | Invoke-Expression
     }
     else {
-        # Fall back to the built-in theme
-        Write-Warning "Theme file not found at '$themeFile'. Using built-in default."
+        Write-Warning "Theme file not found. Using built-in default."
         oh-my-posh init pwsh | Invoke-Expression
     }
 }
