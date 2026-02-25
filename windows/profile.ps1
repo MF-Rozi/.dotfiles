@@ -79,8 +79,9 @@ Function mcconsole {
             finally {
                 # Zero out the BSTR as soon as possible
                 [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
-                $plainPass = $null
-                Remove-Variable plainPass -ErrorAction SilentlyContinue
+                if ($plainPass) {
+                    Remove-Variable plainPass -Force -ErrorAction SilentlyContinue
+                }
                 $securePass.Dispose()
                 [GC]::Collect()
             }
