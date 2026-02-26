@@ -214,6 +214,8 @@ Function wingetupgrade {
 
     for ($i = 0; $i -lt $idlist.Count; $i++) {
         $id = $idlist[$i]
+        $percent = [math]::Round((($i + 1) / $idlist.Count) * 100)
+        Write-Progress -Activity "Upgrading Packages" -Status "Processing $id ($($i + 1)/$($idlist.Count))" -PercentComplete $percent
         Write-Host "`n[$($i + 1)/$($idlist.Count)] Upgrading $id…" -ForegroundColor Cyan
 
         & winget upgrade --id $id --accept-package-agreements --accept-source-agreements --silent 2>&1 | Out-Null
