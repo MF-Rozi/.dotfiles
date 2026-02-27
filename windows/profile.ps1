@@ -229,6 +229,7 @@ Function wingetupgrade {
             $failedPackages.Add($id)
         }
     }
+    Write-Progress -Activity "Upgrading Packages" -Completed
 
     # --- Summary ---
     $failCount = $failedPackages.Count
