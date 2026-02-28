@@ -95,6 +95,15 @@ Function mcconsole {
         Write-Error "Failed to connect: $_"
     }
 }
+
+# Register tab completion for mcconsole
+Register-ArgumentCompleter -CommandName mcconsole -ParameterName Server -ScriptBlock {
+    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+    @('mc.mfrozi.xyz', 'localhost') | Where-Object { $_ -like "$wordToComplete*" } | ForEach-Object {
+        [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+    }
+}
+
 # Winget Upgrade with Admin Privileges
 Function wingetupgrade {
     [CmdletBinding()]
