@@ -106,7 +106,7 @@ Register-ArgumentCompleter -CommandName mcconsole -ParameterName Server -ScriptB
 
 # Winget Upgrade with Admin Privileges
 Function wingetupgrade {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter()] [switch]$Force,
         [Parameter()] [string[]]$Include,
@@ -139,6 +139,10 @@ Function wingetupgrade {
     }
 
     Write-Host "Running with Administrator privileges." -ForegroundColor Green
+
+    if (-not $PSCmdlet.ShouldProcess("System", "Check and upgrade winget packages")) {
+        return
+    }
 
     if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
         Write-Error "winget not found. Install App Installer from the Microsoft Store."
