@@ -267,11 +267,24 @@ $(if ($failCount) { "`nFailed:`n$($failedPackages -join "`n")" })
 Function Update-Profile {
     [CmdletBinding()]
     param(
-        [string]$ProfileUrl = "https://raw.githubusercontent.com/MF-Rozi/.dotfiles/main/windows/profile.ps1"
+        [string]$ProfileUrl = "https://raw.githubusercontent.com/MF-Rozi/.dotfiles/main/windows/profile.ps1",
+        [switch]$Force
     )
 
+    $cacheFile = Join-Path $env:TEMP "profile-check.txt"
+    $cacheExpiry = (Get-Date).AddHours(-24)
+    
+    if (-not $Force -and (Test-Path $cacheFile)) {
+        $lastCheck = Get-Item $cacheFile | Select-Object -ExpandProperty LastWriteTime
+        if ($lastCheck -gt $cacheExpiry) {
+            Write-Verbose "Profile check skipped (last checked: $lastCheck). Use -Force to override."
+            return
+        }
+    }
+
     try {
-        $webContent = Invoke-RestMethod -Uri $ProfileUrl -ErrorAction Stop
+        $webContent = Invoke-RestMethod -Uri $ProfileUrl -TimeoutSec 5 -ErrorAction Stop
+        "checked" | Set-Content $cacheFile -Force
 
         # Ensure $PROFILE file exists for comparison
         $currentContent = if (Test-Path $PROFILE) {
