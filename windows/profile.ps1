@@ -37,6 +37,14 @@ if (Get-Module -ListAvailable PSReadLine) {
     Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 }
 
+# Import additional modules if available
+$modules = @('posh-git')
+foreach ($module in $modules) {
+    if (Get-Module -ListAvailable -Name $module) {
+        Import-Module $module -ErrorAction SilentlyContinue
+    }
+}
+
 # Connect to Minecraft Console
 Function mcconsole {
     [CmdletBinding()]
