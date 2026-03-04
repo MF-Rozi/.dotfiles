@@ -142,9 +142,11 @@ dotfiles/
 - **PowerShell Profile** with Oh-My-Posh integration
   - Automated installation script ([install-profile.ps1](windows/install-profile.ps1))
   - Custom profile configuration ([profile.ps1](windows/profile.ps1))
-  - Optional Terminal-Icons and PSReadLine modules
-  - Unix-like aliases (pwd, ll, which)
-  - Graceful Oh-My-Posh theme loading with fallback to built-in default if theme file is missing
+  - **Graceful Oh-My-Posh theme loading** with fallback to built-in default
+    - Checks for theme file existence before loading
+    - Falls back to default theme if custom theme not found
+    - Clear warning messages for missing components
+    - Prevents profile load failures from missing theme files
   - **PSReadLine enhancements** pre-configured:
     - History-based prediction with ListView style
     - Incremental history save (up to 10240 entries)
