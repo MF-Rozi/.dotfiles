@@ -151,7 +151,7 @@ dotfiles/
     - History-based prediction with ListView style
     - Incremental history save (up to 10240 entries)
     - Tab completion with menu selection
-  - UTF-8 console output encoding
+    - UTF-8 console output encoding
   - **mcconsole** function for Minecraft server SSH access
     - Configurable parameters: `-Server`, `-User`, `-ScreenSession`
     - Defaults: `mc.mfrozi.xyz`, `mfrozi`, `mcserver`
