@@ -153,15 +153,20 @@ dotfiles/
     - Tab completion with menu selection
     - UTF-8 console output encoding
   - **mcconsole** function for Minecraft server SSH access
+    - Tab completion for server parameter (`mc.mfrozi.xyz`, `localhost`)
     - Configurable parameters: `-Server`, `-User`, `-ScreenSession`
     - Defaults: `mc.mfrozi.xyz`, `mfrozi`, `mcserver`
     - Prefers native OpenSSH with key-based authentication
     - Falls back to PuTTY `plink` if `ssh` is not available
-    - Pageant key agent support (avoids password prompts entirely)
-    - Secure password handling with `ZeroFreeBSTR` memory cleanup
+    - Pageant key agent support (avoids password prompts)
+    - **Enhanced security for credential handling**
+      - Uses SecureString for password input
+      - Automatic BSTR (Binary String) memory zeroing after use
+      - Immediate garbage collection to clear sensitive data from memory
+      - Prevents password exposure in process memory dumps
+      - Force removal of password variables from session
     - Exit code validation with error reporting
-    - Error handling with graceful fallbacks
-    - Supports `-Verbose` flag for detailed output
+    - Comprehensive error handling with graceful fallbacks
   - **wingetupgrade** function for automated Windows package updates
     - Automatically elevates to admin privileges if needed
     - All parameters (`-Force`, `-Include`, `-SkipIgnoreList`, `-DryRun`) are forwarded when re-launching elevated
