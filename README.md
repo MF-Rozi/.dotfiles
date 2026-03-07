@@ -168,22 +168,20 @@ dotfiles/
     - Exit code validation with error reporting
     - Comprehensive error handling with graceful fallbacks
   - **wingetupgrade** function for automated Windows package updates
-    - Automatically elevates to admin privileges if needed
-    - All parameters (`-Force`, `-Include`, `-SkipIgnoreList`, `-DryRun`) are forwarded when re-launching elevated
-    - Uses `pwsh` (PowerShell 7+) for elevated session instead of legacy `powershell`
-    - Parameters: `-Force` (skip confirmation), `-Include` (add specific packages), `-SkipIgnoreList`, `-DryRun` (preview without changes)
-    - Attempts structured JSON output from winget (≥ 1.6) for reliable parsing; falls back to text regex
-    - Text-mode parsing skips header lines to reduce false-positive package matches
-    - Upgrades all winget packages except those in ignore list
-    - Excludes: Laragon, Discord, YogaDNS, Spicetify
-    - User confirmation prompt before upgrading (unless `-Force` is used)
-    - Silent installation with automatic agreement acceptance
-    - Duplicate package handling
-    - Progress indicator (1/5, 2/5, etc.)
-    - Tracks failed packages with detailed reporting
-    - Success/failure tracking with summary report
-    - Automatic log file generation in temp folder
-    - Colored output with visual indicators (✓, ✗, •)
+    - **Automatic privilege elevation** - launches new elevated terminal if needed
+    - All parameters forwarded when re-launching
+    - **Real-time progress indicators**
+      - Visual progress bar showing percentage complete
+      - Current package counter (e.g., "Processing 5/20")
+      - Per-package status updates with colored output
+      - Automatic progress bar cleanup when finished
+    - **Intelligent parsing** - tries JSON output first, falls back to text parsing
+    - Parameters:
+      - `-Force`: Skip confirmation prompt
+      - `-Include <string[]>`: Add specific packages
+      - `-SkipIgnoreList`: Ignore the built-in exclusion list
+      - `-DryRun`: Preview changes without installing
+
   - **Update-Profile** function for profile update checking
     - Accepts custom `-ProfileUrl` parameter (defaults to GitHub repository)
     - Uses `Invoke-RestMethod` for cleaner raw-string comparison
