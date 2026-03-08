@@ -153,9 +153,12 @@ dotfiles/
     - Tab completion with menu selection
     - UTF-8 console output encoding
   - **mcconsole** function for Minecraft server SSH access
-    - Tab completion for server parameter (`mc.mfrozi.xyz`, `localhost`)
+    - **Smart tab completion for server parameter**
+    - Pre-configured server list: `mc.mfrozi.xyz`, `localhost`
+    - Type partial server name and press Tab to autocomplete
+    - Supports custom server additions via ArgumentCompleter
+    - Context-aware completion with proper PowerShell integration
     - Configurable parameters: `-Server`, `-User`, `-ScreenSession`
-    - Defaults: `mc.mfrozi.xyz`, `mfrozi`, `mcserver`
     - Prefers native OpenSSH with key-based authentication
     - Falls back to PuTTY `plink` if `ssh` is not available
     - Pageant key agent support (avoids password prompts)
