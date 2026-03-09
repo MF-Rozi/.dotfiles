@@ -277,6 +277,20 @@ SPACESHIP_PROMPT_ORDER=(
 )
 ```
 
+### Add More Servers To mcconsole Tab Completion
+
+```powershell
+# Edit profile.ps1 - modify the Register-ArgumentCompleter section
+Register-ArgumentCompleter -CommandName mcconsole -ParameterName Server -ScriptBlock {
+    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+    @('mc.mfrozi.xyz', 'localhost', 'dev.example.com', 'staging.example.com') |
+        Where-Object { $_ -like "$wordToComplete*" } |
+        ForEach-Object {
+            [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+        }
+}
+```
+
 ### Theme Management
 
 The repository includes multiple theme files for reference:
