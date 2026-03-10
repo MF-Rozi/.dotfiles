@@ -184,6 +184,16 @@ dotfiles/
       - `-Include <string[]>`: Add specific packages
       - `-SkipIgnoreList`: Ignore the built-in exclusion list
       - `-DryRun`: Preview changes without installing
+    - **WhatIf and ShouldProcess support**
+      - `-WhatIf` parameter shows what would happen without making changes
+      - ShouldProcess integration for PowerShell best practices
+      - Respects `$PSCmdlet.ShouldProcess()` for conditional execution
+      - Compatible with `-Confirm` parameter for extra safety
+    - **Verbose logging support**
+      - Use `-Verbose` flag for detailed operation logs
+      - Shows package detection process
+      - Displays filtering and exclusion decisions
+      - Tracks each upgrade attempt with timestamps
 
   - **Update-Profile** function for profile update checking
     - Accepts custom `-ProfileUrl` parameter (defaults to GitHub repository)
