@@ -194,7 +194,6 @@ dotfiles/
       - Shows package detection process
       - Displays filtering and exclusion decisions
       - Tracks each upgrade attempt with timestamps
-
   - **Update-Profile** function for profile update checking
     - Accepts custom `-ProfileUrl` parameter (defaults to GitHub repository)
     - Uses `Invoke-RestMethod` for cleaner raw-string comparison
