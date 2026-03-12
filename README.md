@@ -383,6 +383,19 @@ Download and install from [Nerd Fonts](https://www.nerdfonts.com/):
 - Fira Code Nerd Font
 - Cascadia Code (built-in with Windows Terminal)
 
+**Using Verbose Mode:**
+
+```powershell
+# See detailed information during operations
+wingetupgrade -Verbose              # Shows all processing steps
+mcconsole -Verbose -Server localhost # SSH connection details
+Update-Profile -Verbose             # Profile comparison details
+
+# Dry run with detailed output
+wingetupgrade -DryRun -Verbose      # See what would be upgraded + why
+wingetupgrade -WhatIf               # PowerShell standard preview
+```
+
 ### Quick Commands
 
 Check out the `shortcuts/shortcuts.md` file for a list of useful commands and shortcuts to enhance your productivity.
