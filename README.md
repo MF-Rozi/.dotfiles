@@ -195,14 +195,18 @@ dotfiles/
       - Displays filtering and exclusion decisions
       - Tracks each upgrade attempt with timestamps
   - **Update-Profile** function for profile update checking
-    - Accepts custom `-ProfileUrl` parameter (defaults to GitHub repository)
-    - Uses `Invoke-RestMethod` for cleaner raw-string comparison
-    - Normalizes line endings (CRLF vs LF) before comparing local and remote profiles
-    - Creates a timestamped backup (`$PROFILE.bak-yyyyMMdd-HHmmss`) before overwriting
+    - **Intelligent 24-hour caching system**
+      - Checks for updates only once per day by default
+      - Cache stored in `%TEMP%\profile-check.txt`
+      - Reduces unnecessary network requests
+      - `-Force` parameter bypasses cache for immediate check
+      - Cache automatically expires after 24 hours
+    - Accepts custom `-ProfileUrl` parameter for alternative sources
+    - Normalizes line endings (CRLF vs LF) for cross-platform compatibility
+    - Creates timestamped backups before updating (`$PROFILE.bak-YYYYMMDD-HHmmss`)
     - Handles missing `$PROFILE` file gracefully (first-time setup)
-    - Writes updated profile with explicit UTF-8 encoding
+    - UTF-8 encoding for profile files
     - Prompts for confirmation before updating
-    - Requires PowerShell restart after update
     - Default URL: `https://raw.githubusercontent.com/MF-Rozi/.dotfiles/main/windows/profile.ps1`
 
 ## 🛠️ Manual Installation
