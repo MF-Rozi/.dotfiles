@@ -400,6 +400,16 @@ wingetupgrade -DryRun -Verbose      # See what would be upgraded + why
 wingetupgrade -WhatIf               # PowerShell standard preview
 ```
 
+**Profile Update Management:**
+
+```powershell
+# Automatic check (respects 24h cache)
+Update-Profile
+
+# Force immediate check (bypass cache)
+Update-Profile -Force
+```
+
 ### Quick Commands
 
 Check out the `shortcuts/shortcuts.md` file for a list of useful commands and shortcuts to enhance your productivity.
