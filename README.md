@@ -379,8 +379,11 @@ yay -S nerd-fonts-jetbrains-mono
 yay -S nerd-fonts-fira-code
 yay -S nerd-fonts-hack
 ```
-**Windows:**
+
+#### **Windows:**
+
 Download and install from [Nerd Fonts](https://www.nerdfonts.com/):
+
 - JetBrains Mono Nerd Font
 - Fira Code Nerd Font
 - Cascadia Code (built-in with Windows Terminal)
