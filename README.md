@@ -409,6 +409,15 @@ Update-Profile
 
 # Force immediate check (bypass cache)
 Update-Profile -Force
+
+# Force immediate check (bypass cache)
+Update-Profile -Force
+
+# Check against custom repository fork
+Update-Profile -ProfileUrl "https://raw.githubusercontent.com/YOUR-USERNAME/.dotfiles/main/windows/profile.ps1"
+
+# With verbose output to see cache status
+Update-Profile -Verbose -Force
 ```
 
 ### Quick Commands
