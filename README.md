@@ -208,6 +208,18 @@ dotfiles/
     - UTF-8 encoding for profile files
     - Prompts for confirmation before updating
     - Default URL: `https://raw.githubusercontent.com/MF-Rozi/.dotfiles/main/windows/profile.ps1`
+  - **Automatic module loading** for enhanced functionality
+    - **posh-git**: Git repository status in prompt
+      - Shows current branch name
+      - Displays uncommitted changes indicator
+      - Tracks ahead/behind remote status
+    - **PSReadLine**: Enhanced command-line editing
+      - History-based command prediction with ListView
+      - Incremental history save (up to 10,240 entries)
+      - Tab completion with interactive menu
+      - Syntax highlighting for commands
+    - Silent loading - continues gracefully if modules not installed
+    - No errors on fresh installs, just optional enhancements
 
 ## 🛠️ Manual Installation
 
