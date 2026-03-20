@@ -268,6 +268,23 @@ cd ~/dotfiles/windows
 - `-NoPrompt`: Install without prompting for optional modules
 - `-ProfileSource <path>`: Specify custom profile.ps1 path
 
+**Install Optional PowerShell Modules:**
+
+```powershell
+# Open PowerShell as Administrator (for AllUsers scope) or regular user (for CurrentUser)
+
+# Essential modules
+Install-Module PSReadLine -Force -Scope CurrentUser
+Install-Module posh-git -Scope CurrentUser
+
+# Optional visual enhancements
+Install-Module Terminal-Icons -Scope CurrentUser  # File/folder icons in ls output
+Install-Module PSFzf -Scope CurrentUser           # Fuzzy finder integration
+
+# Verify installation
+Get-Module -ListAvailable PSReadLine, posh-git, Terminal-Icons
+```
+
 ## 🎯 Customization
 
 Feel free to fork this repository and customize it to your needs:
