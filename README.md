@@ -396,7 +396,7 @@ If you have any questions or run into issues:
 
 ## 💡 Tips
 
-### Recommended Fonts
+### Recommended Fonts for Linux
 
 For the best experience with Spaceship theme and icons, install a Nerd Font:
 
@@ -409,7 +409,7 @@ yay -S nerd-fonts-fira-code
 yay -S nerd-fonts-hack
 ```
 
-#### **Windows:**
+### **Windows:**
 
 Download and install from [Nerd Fonts](https://www.nerdfonts.com/):
 
