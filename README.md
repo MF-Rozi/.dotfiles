@@ -121,9 +121,16 @@ dotfiles/
   - DNS cloaking and forwarding rules
   - Systemd integration for Arch Linux
 - **Port-specific DNS routing** for applications like Minecraft
-  - Route traffic from specific ports to Cloudflare DNS
-  - Iptables-based packet marking and routing
-  - Persistent rules across reboots
+  - Route traffic from specific ports to Cloudflare DNS (1.1.1.1)
+  - Iptables-based packet marking and routing with fwmark offset
+  - Persistent rules across reboots with automatic systemd service setup
+  - Validation for ports (1-65535)
+  - Dry-run mode to preview changes without applying
+  - Safe reset with backup and confirmation prompts
+  - Idempotent setup (no duplicate rules on repeated runs)
+  - Comprehensive rule display with iptables line numbers
+  - Automatic log file generation with timestamps
+  - Support for custom DNS servers via environment variables
 
   ### Development Tools
 
