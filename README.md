@@ -159,24 +159,30 @@ dotfiles/
     - Incremental history save (up to 10240 entries)
     - Tab completion with menu selection
     - UTF-8 console output encoding
-  - **mcconsole** function for Minecraft server SSH access
-    - **Smart tab completion for server parameter**
-    - Pre-configured server list: `mc.mfrozi.xyz`, `localhost`
-    - Type partial server name and press Tab to autocomplete
-    - Supports custom server additions via ArgumentCompleter
-    - Context-aware completion with proper PowerShell integration
-    - Configurable parameters: `-Server`, `-User`, `-ScreenSession`
-    - Prefers native OpenSSH with key-based authentication
-    - Falls back to PuTTY `plink` if `ssh` is not available
-    - Pageant key agent support (avoids password prompts)
-    - **Enhanced security for credential handling**
-      - Uses SecureString for password input
+  - **mcconsole** - Smart Minecraft Server SSH Function
+    - **Intelligent SSH/PuTTY selection:**
+      - Prefers native OpenSSH with key-based authentication
+      - Falls back to PuTTY `plink` if SSH is unavailable
+      - Pageant key agent support (avoids password prompts entirely)
+    - **Smart tab completion for server parameter:**
+      - Pre-configured server list: `mc.mfrozi.xyz`, `localhost`
+      - Type partial server name and press Tab to autocomplete
+      - Context-aware completion with proper PowerShell integration
+      - Easy to add more servers (edit ArgumentCompleter block)
+    - **Configurable parameters:**
+      - `-Server` (default: `mc.mfrozi.xyz`)
+      - `-User` (default: `mfrozi`)
+      - `-ScreenSession` (default: `mcserver`)
+    - **Advanced security features:**
+      - Uses SecureString for password input (never plaintext)
       - Automatic BSTR (Binary String) memory zeroing after use
-      - Immediate garbage collection to clear sensitive data from memory
+      - Immediate garbage collection to clear sensitive data
       - Prevents password exposure in process memory dumps
       - Force removal of password variables from session
-    - Exit code validation with error reporting
-    - Comprehensive error handling with graceful fallbacks
+    - **Comprehensive error handling:**
+      - Exit code validation with clear error messages
+      - Graceful fallbacks if SSH/plink not found
+      - Helpful installation guidance
   - **wingetupgrade** function for automated Windows package updates
     - **Automatic privilege elevation** - launches new elevated terminal if needed
     - All parameters forwarded when re-launching
