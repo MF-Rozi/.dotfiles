@@ -183,7 +183,37 @@ dotfiles/
       - Exit code validation with clear error messages
       - Graceful fallbacks if SSH/plink not found
       - Helpful installation guidance
-  - **wingetupgrade** function for automated Windows package updates
+  - **wingetupgrade** - Intelligent Package Update Manager
+    - **Automatic privilege elevation:**
+      - Launches new elevated terminal if not run as admin
+      - All parameters properly forwarded during re-launch
+      - Uses `pwsh` (PowerShell 7+) for faster performance
+    - **Real-time progress indicators:**
+      - Visual progress bar showing percentage complete
+      - Current package counter (e.g., "5/20")
+      - Per-package status updates with colored output
+      - Automatic progress bar cleanup when finished
+    - **Intelligent parsing:**
+      - Tries structured JSON output from winget first (≥ 1.6)
+      - Header-aware text parsing to reduce false positives
+      - Fallback to text regex if JSON unavailable
+      - Duplicate package handling
+    - **Flexible parameters:**
+      - `-Force`: Skip confirmation prompt
+      - `-Include <string[]>`: Add specific packages to upgrade list
+      - `-SkipIgnoreList`: Ignore built-in exclusion list
+      - `-DryRun`: Preview changes without installing
+      - `-Verbose`: Detailed operation logs
+      - `-WhatIf`: PowerShell standard preview (ShouldProcess support)
+    - **Smart exclusion list (customizable):**
+      - Excludes: `LeNgocKhoa.Laragon`, `Discord.Discord`, `Initex.YogaDNS`, `Spicetify.Spicetify`
+      - Prevents updates that might interfere with other tools
+    - **Comprehensive reporting:**
+      - Success/failure tracking with summary
+      - Failed packages listed with exit codes
+      - Automatic log file generation in temp folder with timestamp
+      - Colored output with visual indicators (✓, ✗, •)
+      - Summary statistics: Total | Success | Failed
     - **Automatic privilege elevation** - launches new elevated terminal if needed
     - All parameters forwarded when re-launching
     - **Real-time progress indicators**
