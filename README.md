@@ -237,33 +237,33 @@ dotfiles/
       - Shows package detection process
       - Displays filtering and exclusion decisions
       - Tracks each upgrade attempt with timestamps
-    - **Update-Profile** - Smart Profile Version Management
-      - **Intelligent 24-hour caching system:**
-        - Checks for updates only once per day by default
-        - Cache stored in `%TEMP%\profile-check.txt`
-        - `-Force` parameter bypasses cache for immediate check
-        - Cache automatically expires after 24 hours
-      - **Custom profile source support:**
-        - `-ProfileUrl` parameter accepts alternative GitHub repos
-        - Default: `https://raw.githubusercontent.com/MF-Rozi/.dotfiles/main/windows/profile.ps1`
-        - Useful for personal forks and custom distributions
-      - **Cross-platform compatibility:**
-        - Normalizes line endings (CRLF vs LF) for reliable comparison
-        - Prevents false positives from encoding differences
-        - Works seamlessly with git-managed profiles
-      - **Safe update process:**
-        - Creates timestamped backups (`$PROFILE.bak-YYYYMMDD-HHmmss`)
-        - Handles missing `$PROFILE` file gracefully (first-time setup)
-        - Writes updated profile with explicit UTF-8 encoding
-        - User confirmation prompt before updating
-        - Clear messaging on completion
+  - **Update-Profile** - Smart Profile Version Management
+    - **Intelligent 24-hour caching system:**
+      - Checks for updates only once per day by default
+      - Cache stored in `%TEMP%\profile-check.txt`
+      - `-Force` parameter bypasses cache for immediate check
+      - Cache automatically expires after 24 hours
+    - **Custom profile source support:**
+      - `-ProfileUrl` parameter accepts alternative GitHub repos
+      - Default: `https://raw.githubusercontent.com/MF-Rozi/.dotfiles/main/windows/profile.ps1`
+      - Useful for personal forks and custom distributions
+    - **Cross-platform compatibility:**
+      - Normalizes line endings (CRLF vs LF) for reliable comparison
+      - Prevents false positives from encoding differences
+      - Works seamlessly with git-managed profiles
+    - **Safe update process:**
+      - Creates timestamped backups (`$PROFILE.bak-YYYYMMDD-HHmmss`)
+      - Handles missing `$PROFILE` file gracefully (first-time setup)
+      - Writes updated profile with explicit UTF-8 encoding
+      - User confirmation prompt before updating
+      - Clear messaging on completion
       - **Usage examples:**
-        ```powershell
-        Update-Profile                    # Check with cache (once/day)
-        Update-Profile -Force             # Force immediate check
-        Update-Profile -Force -Verbose    # With detailed output
-        Update-Profile -ProfileUrl "https://raw.githubusercontent.com/YOUR-USERNAME/.dotfiles/main/windows/profile.ps1"
-        ```
+      ```powershell
+      Update-Profile                    # Check with cache (once/day)
+      Update-Profile -Force             # Force immediate check
+      Update-Profile -Force -Verbose    # With detailed output
+      Update-Profile -ProfileUrl "https://raw.githubusercontent.com/YOUR-USERNAME/.dotfiles/main/windows/profile.ps1"
+      ```
   - **Automatic module loading** for enhanced functionality
     - **posh-git**: Git repository status in prompt
       - Shows current branch name
