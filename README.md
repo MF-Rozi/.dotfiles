@@ -264,18 +264,18 @@ dotfiles/
       Update-Profile -Force -Verbose    # With detailed output
       Update-Profile -ProfileUrl "https://raw.githubusercontent.com/YOUR-USERNAME/.dotfiles/main/windows/profile.ps1"
       ```
-  - **Automatic module loading** for enhanced functionality
-    - **posh-git**: Git repository status in prompt
-      - Shows current branch name
+  - **Automatic module loading:**
+    - **posh-git** - Git Repository Status
+      - Shows current branch name in prompt
       - Displays uncommitted changes indicator
       - Tracks ahead/behind remote status
-    - **PSReadLine**: Enhanced command-line editing
+    - **PSReadLine** - Enhanced Command-Line Editing
       - History-based command prediction with ListView
-      - Incremental history save (up to 10,240 entries)
+      - Incremental history save (up to 4096 entries)
       - Tab completion with interactive menu
       - Syntax highlighting for commands
-    - Silent loading - continues gracefully if modules not installed
-    - No errors on fresh installs, just optional enhancements
+    - **Silent loading** - Continues gracefully if modules not installed
+    - **No errors on fresh installs** - Just optional enhancements
 
 ## 🛠️ Manual Installation
 
