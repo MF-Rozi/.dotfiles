@@ -112,16 +112,26 @@ if ($InstallTerminalIcons) {
 }
 
 # Optional: Install PSReadLine
+$supportsAllowPrerelease = (Get-Command Install-Module).Parameters.ContainsKey('AllowPrerelease')
+
 if ($InstallPSReadLine) {
     Write-Host "`nInstalling PSReadLine..." -ForegroundColor Yellow
-    Install-Module -Name PSReadLine -Repository PSGallery -Scope CurrentUser -Force -AllowPrerelease
+    if ($supportsAllowPrerelease) {
+        Install-Module -Name PSReadLine -Repository PSGallery -Scope CurrentUser -Force -AllowPrerelease
+    } else {
+        Install-Module -Name PSReadLine -Repository PSGallery -Scope CurrentUser -Force
+    }
     Write-Host "PSReadLine installed" -ForegroundColor Green
 } elseif (-not $NoPrompt) {
     Write-Host "`nDo you want to update PSReadLine module? (Y/N)" -ForegroundColor Cyan
     $response = Read-Host
     if ($response -eq 'Y' -or $response -eq 'y') {
         Write-Host "Installing PSReadLine..." -ForegroundColor Yellow
-        Install-Module -Name PSReadLine -Repository PSGallery -Scope CurrentUser -Force -AllowPrerelease
+        if ($supportsAllowPrerelease) {
+            Install-Module -Name PSReadLine -Repository PSGallery -Scope CurrentUser -Force -AllowPrerelease
+        } else {
+            Install-Module -Name PSReadLine -Repository PSGallery -Scope CurrentUser -Force
+        }
         Write-Host "PSReadLine installed" -ForegroundColor Green
     }
 }
