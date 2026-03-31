@@ -95,7 +95,8 @@ if (-not $SkipOhMyPosh) {
     }
 } else {
     Write-Host "`nSkipping Oh-My-Posh installation (as requested)" -ForegroundColor Yellow
-    Write-Host "winget not found. Installing via PowerShell module..." -ForegroundColor Yellow
+}
+
 if ($InstallTerminalIcons) {
     Write-Host "`nInstalling Terminal-Icons..." -ForegroundColor Yellow
     Install-Module -Name Terminal-Icons -Repository PSGallery -Scope CurrentUser -Force
@@ -123,10 +124,6 @@ if ($InstallPSReadLine) {
         Install-Module -Name PSReadLine -Repository PSGallery -Scope CurrentUser -Force -AllowPrerelease
         Write-Host "PSReadLine installed" -ForegroundColor Green
     }
-if ($response -eq 'Y' -or $response -eq 'y') {
-    Write-Host "Installing PSReadLine..." -ForegroundColor Yellow
-    Install-Module -Name PSReadLine -Repository PSGallery -Scope CurrentUser -Force -AllowPrerelease
-    Write-Host "PSReadLine installed" -ForegroundColor Green
 }
 
 Write-Host "`n============================================" -ForegroundColor Green
