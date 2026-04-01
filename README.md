@@ -340,6 +340,25 @@ Install-Module PSFzf -Scope CurrentUser           # Fuzzy finder integration
 # Verify installation
 Get-Module -ListAvailable PSReadLine, posh-git, Terminal-Icons
 ```
+### Port-Specific DNS Routing Setup (Linux)
+
+```bash
+# Basic setup with defaults (ports 19132, 25565)
+sudo ./scripts/setup-port-cloudflare-dns.sh setup
+
+# View current rules
+sudo ./scripts/setup-port-cloudflare-dns.sh status
+
+# Remove rules for specific ports
+sudo ./scripts/setup-port-cloudflare-dns.sh remove
+
+# Reset all iptables rules (WARNING: destructive)
+sudo ./scripts/setup-port-cloudflare-dns.sh reset
+
+# Environment variable overrides
+sudo PORTS="19132 25565 8080" CLOUDFLARE_DNS="1.0.0.1" \
+  ./scripts/setup-port-cloudflare-dns.sh setup
+```
 
 ## 🎯 Customization
 
