@@ -412,6 +412,19 @@ Register-ArgumentCompleter -CommandName mcconsole -ParameterName Server -ScriptB
 }
 ```
 
+### Customize wingetupgrade Ignore List
+
+````powershell
+# Edit profile.ps1 - modify the $ignorelist array
+$ignorelist = @(
+    "LeNgocKhoa.Laragon"
+    "Discord.Discord"
+    "Initex.YogaDNS"
+    "Spicetify.Spicetify"
+    "YourPackage.Id"              # Add your own packages
+)
+
+
 ### Theme Management
 
 The repository includes multiple theme files for reference:
@@ -486,7 +499,7 @@ yay -S nerd-fonts-jetbrains-mono
 # Or install other popular Nerd Fonts
 yay -S nerd-fonts-fira-code
 yay -S nerd-fonts-hack
-```
+````
 
 ### **Windows:**
 
