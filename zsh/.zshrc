@@ -196,3 +196,4 @@ export ANDROID_SDK_HOME="$HOME/Android/Sdk"
 export PATH="$ANDROID_SDK_HOME/platform-tools:$PATH"
 
 
+export PATH="$PATH:$(composer global config bin-dir --absolute --quiet)"
