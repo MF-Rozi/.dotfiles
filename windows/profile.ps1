@@ -122,14 +122,12 @@ Function wingetupgrade {
         [Parameter()] [switch]$DryRun
     )
 
-    # --- Administrator Check ---
     $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(
         [Security.Principal.WindowsBuiltInRole]::Administrator)
 
     if (-not $isAdmin) {
         Write-Warning "Administrator privileges required. Launching elevated…"
 
-        # Reconstruct all parameters for the elevated session
         $paramParts = @()
         if ($Force)          { $paramParts += '-Force' }
         if ($SkipIgnoreList) { $paramParts += '-SkipIgnoreList' }
@@ -141,7 +139,6 @@ Function wingetupgrade {
         $bytes = [Text.Encoding]::Unicode.GetBytes($commandToRun)
         $encodedCommand = [Convert]::ToBase64String($bytes)
 
-        # Use pwsh (PS 7) — change to 'powershell' if you only have 5.1
         Start-Process wt -Verb RunAs -ArgumentList "-- pwsh -NoExit -EncodedCommand $encodedCommand"
         return
     }
@@ -166,110 +163,167 @@ Function wingetupgrade {
 
     Write-Host "Checking for updates…" -ForegroundColor Cyan
 
-    # --- Parse available upgrades ---
-    $idlist = [Collections.Generic.List[string]]::new()
+    $packages = [System.Collections.Generic.List[object]]::new()
 
     try {
-        # Attempt structured JSON output first (winget ≥ 1.6)
         $jsonOutput = & winget upgrade --include-unknown --accept-source-agreements --output json 2>$null
         if ($jsonOutput) {
             $items = $jsonOutput | ConvertFrom-Json
             foreach ($item in $items) {
                 $id = $item.PackageIdentifier
+                if (-not $id) { continue }
                 if (-not $SkipIgnoreList -and $id -in $ignorelist) { continue }
-                if ($id -and $id -notin $idlist) { $idlist.Add($id) }
+
+                $packages.Add([pscustomobject]@{
+                    Name              = $item.PackageName
+                    Id                = $id
+                    InstalledVersion  = $item.InstalledVersion
+                    AvailableVersion  = $item.AvailableVersion
+                    Source            = $item.Source
+                    Status            = "Pending"
+                    ExitCode          = $null
+                })
             }
         }
-        else { throw "empty json" }
+        else {
+            throw "empty json"
+        }
     }
     catch {
-        # Fallback: text parsing
         $updatelist = winget upgrade --include-unknown 2>&1
 
-        # Find header line to know where data starts
         $headerIndex = ($updatelist | ForEach-Object { $_.ToString() } |
             Select-String -Pattern '^-{3,}' |
             Select-Object -First 1).LineNumber
 
         $idPattern = '(?<id>[A-Za-z][A-Za-z0-9-]*\.[A-Za-z0-9\.\-]+)'
+
         foreach ($line in $updatelist[($headerIndex)..($updatelist.Count - 1)]) {
             if ($line -match $idPattern) {
                 $id = $Matches['id']
                 if (-not $SkipIgnoreList -and $id -in $ignorelist) { continue }
-                if ($id -notin $idlist) { $idlist.Add($id) }
+
+                $packages.Add([pscustomobject]@{
+                    Name              = $id
+                    Id                = $id
+                    InstalledVersion  = $null
+                    AvailableVersion  = $null
+                    Source            = $null
+                    Status            = "Pending"
+                    ExitCode          = $null
+                })
             }
         }
     }
 
     if ($Include) {
         foreach ($pkg in $Include) {
-            if ($pkg -notin $idlist) { $idlist.Add($pkg) }
+            if ($pkg -notin $packages.Id) {
+                $packages.Add([pscustomobject]@{
+                    Name              = $pkg
+                    Id                = $pkg
+                    InstalledVersion  = $null
+                    AvailableVersion  = $null
+                    Source            = $null
+                    Status            = "Pending"
+                    ExitCode          = $null
+                })
+            }
         }
     }
 
-    if ($idlist.Count -eq 0) {
+    if ($packages.Count -eq 0) {
         Write-Host "✓ No new software updates to install." -ForegroundColor Green
         return
     }
 
-    Write-Host "`n--- $($idlist.Count) package(s) will be upgraded ---" -ForegroundColor Yellow
-    $idlist | ForEach-Object { Write-Host "  • $_" -ForegroundColor White }
+    Write-Host ""
+    Write-Host "Packages found:" -ForegroundColor Yellow
+    $packages | Sort-Object Name | Format-Table `
+        @{Label="Name"; Expression={$_.Name}; Width=28}, `
+        @{Label="Id"; Expression={$_.Id}; Width=35}, `
+        @{Label="Installed"; Expression={ if ($_.InstalledVersion) { $_.InstalledVersion } else { "-" } }; Width=14}, `
+        @{Label="Available"; Expression={ if ($_.AvailableVersion) { $_.AvailableVersion } else { "-" } }; Width=14}, `
+        @{Label="Source"; Expression={ if ($_.Source) { $_.Source } else { "-" } }; Width=10} `
+        -AutoSize
 
     if ($DryRun) {
-        Write-Host "`n[DRY RUN] No changes made." -ForegroundColor Magenta
+        Write-Host ""
+        Write-Host "[DRY RUN] No changes made." -ForegroundColor Magenta
         return
     }
 
     if (-not $Force) {
-        $confirm = Read-Host "`nProceed? (Y/N)"
+        $confirm = Read-Host "`nProceed with these upgrades? (Y/N)"
         if ($confirm -notin @('Y', 'y')) {
             Write-Host "Cancelled." -ForegroundColor Yellow
             return
         }
     }
 
-    # --- Upgrade loop ---
-    Write-Host "`n--- Starting Upgrades ---" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "Starting upgrades…" -ForegroundColor Cyan
+
     $successCount = 0
-    $failedPackages = [Collections.Generic.List[string]]::new()
+    $failedPackages = [Collections.Generic.List[object]]::new()
 
-    for ($i = 0; $i -lt $idlist.Count; $i++) {
-        $id = $idlist[$i]
-        $percent = [math]::Round((($i + 1) / $idlist.Count) * 100)
-        Write-Progress -Activity "Upgrading Packages" -Status "Processing $id ($($i + 1)/$($idlist.Count))" -PercentComplete $percent
-        Write-Host "`n[$($i + 1)/$($idlist.Count)] Upgrading $id…" -ForegroundColor Cyan
+    for ($i = 0; $i -lt $packages.Count; $i++) {
+        $pkg = $packages[$i]
+        $percent = [math]::Round((($i + 1) / $packages.Count) * 100)
 
-        & winget upgrade --id $id --accept-package-agreements --accept-source-agreements --silent 2>&1 | Out-Null
+        Write-Progress -Activity "Upgrading Packages" -Status "Processing $($pkg.Id) ($($i + 1)/$($packages.Count))" -PercentComplete $percent
+        Write-Host ""
+        Write-Host "[$($i + 1)/$($packages.Count)] Upgrading $($pkg.Name) [$($pkg.Id)]" -ForegroundColor Cyan
+
+        & winget upgrade --id $pkg.Id --accept-package-agreements --accept-source-agreements --silent 2>&1 | Out-Null
+        $pkg.ExitCode = $LASTEXITCODE
 
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "  ✓ $id" -ForegroundColor Green
+            $pkg.Status = "Success"
+            Write-Host "  OK" -ForegroundColor Green
             $successCount++
         }
         else {
-            Write-Warning "  ✗ $id (exit $LASTEXITCODE)"
-            $failedPackages.Add($id)
+            $pkg.Status = "Failed"
+            Write-Warning "  Failed with exit code $LASTEXITCODE"
+            $failedPackages.Add($pkg)
         }
     }
+
     Write-Progress -Activity "Upgrading Packages" -Completed
 
-    # --- Summary ---
     $failCount = $failedPackages.Count
-    Write-Host "`n$('═' * 50)" -ForegroundColor Cyan
-    Write-Host "  Total: $($idlist.Count)  ✓ $successCount  ✗ $failCount" -ForegroundColor White
-    if ($failCount -gt 0) {
-        $failedPackages | ForEach-Object { Write-Host "    • $_" -ForegroundColor Red }
-    }
-    Write-Host "$('═' * 50)" -ForegroundColor Cyan
 
-    # Log
+    Write-Host ""
+    Write-Host "Summary" -ForegroundColor Cyan
+    Write-Host "  Total packages   : $($packages.Count)" -ForegroundColor White
+    Write-Host "  Successful       : $successCount" -ForegroundColor Green
+    Write-Host "  Failed           : $failCount" -ForegroundColor Red
+
+    if ($failCount -gt 0) {
+        Write-Host ""
+        Write-Host "Failed packages:" -ForegroundColor Red
+        $failedPackages | ForEach-Object {
+            Write-Host "  - $($_.Name) [$($_.Id)] (exit $($_.ExitCode))" -ForegroundColor Red
+        }
+    }
+
+    Write-Host ""
+    Write-Host "Detailed results:" -ForegroundColor Yellow
+    $packages | Select-Object Name, Id, InstalledVersion, AvailableVersion, Status | Format-Table -AutoSize
+
     $logPath = Join-Path $env:TEMP "winget-upgrade-$(Get-Date -Format 'yyyyMMdd-HHmmss').log"
     @"
-Winget Upgrade — $(Get-Date)
-Total: $($idlist.Count) | OK: $successCount | Failed: $failCount
-$($idlist -join "`n")
-$(if ($failCount) { "`nFailed:`n$($failedPackages -join "`n")" })
+Winget Upgrade - $(Get-Date)
+Total packages: $($packages.Count)
+Successful: $successCount
+Failed: $failCount
+
+Results:
+$($packages | ForEach-Object { "$($_.Status) | $($_.Name) | $($_.Id) | $($_.InstalledVersion) -> $($_.AvailableVersion) | Exit: $($_.ExitCode)" } | Out-String)
 "@ | Set-Content $logPath -Encoding UTF8
-    Write-Host "Log: $logPath" -ForegroundColor Gray
+
+    Write-Host "Log saved to: $logPath" -ForegroundColor Gray
 }
 # Helper function to check for profile updates
 Function Update-Profile {
