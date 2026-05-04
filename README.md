@@ -443,6 +443,7 @@ The repository includes multiple theme files for reference:
 - [ ] Additional custom themes and color schemes
 - [ ] Git configuration files (.gitconfig, .gitignore_global)
 - [ ] Automated backup and restore functionality
+- [ ] Multi-platform support improvements
 
 ## ✅ Completed Features
 
@@ -451,9 +452,12 @@ The repository includes multiple theme files for reference:
 - ✅ DNSCrypt-Proxy configuration
 - ✅ Windows setup automation
 - ✅ PowerShell profile with Oh-My-Posh
-- ✅ Port-specific DNS routing
+- ✅ Port-specific DNS routing with idempotency
 - ✅ System-specific installation scripts
 - ✅ ASDF version manager setup
+- ✅ SSH key-based authentication for mcconsole
+- ✅ Intelligent wingetupgrade with JSON parsing
+- ✅ 24-hour profile update caching
 
 ## 🤝 Contributing
 
