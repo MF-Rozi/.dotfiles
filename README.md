@@ -463,13 +463,16 @@ The repository includes multiple theme files for reference:
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
-for contributing:
+### Contributing Guidelines:
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes with conventional commit messages (`git commit -m 'feat: Add some AmazingFeature'`)
+3. Commit changes with conventional commit messages
+   - `feat: Add some AmazingFeature`
+   - `fix: Resolve bug in mcconsole`
+   - `docs: Update README for new features`
 4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request with tittle using conventional commit format
+5. Open a Pull Request with title using conventional commit format
 
 ## 📄 License
 
