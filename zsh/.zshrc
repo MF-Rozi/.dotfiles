@@ -75,6 +75,13 @@ plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
+# Load environment variables from credentials/.env
+if [[ -f ~/dotfiles/credentials/.env ]]; then
+  set -a
+  source ~/dotfiles/credentials/.env
+  set +a
+fi
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"

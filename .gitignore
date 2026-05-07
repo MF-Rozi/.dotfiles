@@ -1,0 +1,10 @@
+# Credentials and secrets - Never commit sensitive data
+credentials/
+secrets/
+.env
+.env.local
+*.key
+*.pem
+*.ppk
+api_keys.json
+config/local/
