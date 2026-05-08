@@ -495,7 +495,7 @@ If you have any questions or run into issues:
 3. Provide as much detail as possible about your system and the issue
 4. Include relevant error messages and system information
 
-## 💡 Tips
+## 💡 Tips & Troubleshooting
 
 ### Recommended Fonts for Linux
 
@@ -508,51 +508,60 @@ yay -S nerd-fonts-jetbrains-mono
 # Or install other popular Nerd Fonts
 yay -S nerd-fonts-fira-code
 yay -S nerd-fonts-hack
-````
+```
 
-### **Windows:**
+### Windows Fonts
 
 Download and install from [Nerd Fonts](https://www.nerdfonts.com/):
 
-- JetBrains Mono Nerd Font
+- JetBrains Mono Nerd Font (recommended)
 - Fira Code Nerd Font
 - Cascadia Code (built-in with Windows Terminal)
 
-**Using Verbose Mode:**
+### Verbose Mode & Troubleshooting
 
 ```powershell
 # See detailed information during operations
 wingetupgrade -Verbose              # Shows all processing steps
 mcconsole -Verbose -Server localhost # SSH connection details
-Update-Profile -Verbose             # Profile comparison details
+Update-Profile -Verbose             # Profile comparison and cache info
 
 # Dry run with detailed output
 wingetupgrade -DryRun -Verbose      # See what would be upgraded + why
 wingetupgrade -WhatIf               # PowerShell standard preview
 ```
 
-**Profile Update Management:**
+### Port-Specific DNS Debugging
+
+```bash
+# List current rules with line numbers
+sudo iptables -t mangle -L OUTPUT -v -n --line-numbers
+sudo iptables -t nat -L OUTPUT -v -n --line-numbers
+
+# Check if kernel modules are loaded
+lsmod | grep -E "nf_nat|nf_conntrack"
+
+# View log of DNS queries (if enabled in dnscrypt-proxy)
+sudo journalctl -u dnscrypt-proxy -f
+```
+
+### PowerShell History & PSReadLine
 
 ```powershell
-# Automatic check (respects 24h cache)
-Update-Profile
+# View PSReadLine history location
+$historyPath = (Get-PSReadLineOption).HistorySavePath
+Write-Host "History saved at: $historyPath"
 
-# Force immediate check (bypass cache)
-Update-Profile -Force
+# Increase history count if needed
+Set-PSReadLineOption -MaximumHistoryCount 10000
 
-# Force immediate check (bypass cache)
-Update-Profile -Force
-
-# Check against custom repository fork
-Update-Profile -ProfileUrl "https://raw.githubusercontent.com/YOUR-USERNAME/.dotfiles/main/windows/profile.ps1"
-
-# With verbose output to see cache status
-Update-Profile -Verbose -Force
+# Clear history if needed
+Remove-Item (Get-PSReadLineOption).HistorySavePath
 ```
 
 ### Quick Commands
 
-Check out the `shortcuts/shortcuts.md` file for a list of useful commands and shortcuts to enhance your productivity.
+Check out the shortcuts.md file for a list of useful commands and shortcuts to enhance your productivity.
 
 ## 📚 References
 
@@ -574,3 +583,4 @@ Check out the `shortcuts/shortcuts.md` file for a list of useful commands and sh
 - [VS Code](https://code.visualstudio.com/)
 
 **Happy coding!** 🚀
+````
