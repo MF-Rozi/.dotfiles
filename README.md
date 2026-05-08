@@ -491,8 +491,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you have any questions or run into issues:
 
 1. Check the [Issues](https://github.com/MF-Rozi/.dotfiles/issues) page
-2. Create a new issue if your problem isn't already reported
+2. "Create a new issue if your problem isn't already reported"
 3. Provide as much detail as possible about your system and the issue
+4. Include relevant error messages and system information
 
 ## 💡 Tips
 
