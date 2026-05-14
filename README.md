@@ -434,6 +434,62 @@ The repository includes multiple theme files for reference:
 - [`mf-rozi-backup-before-clearing-up.zsh-theme`](oh-my-zsh/custom/themes/mf-rozi-backup-before-clearing-up.zsh-theme) - Previous version backup
 - These backup files are kept for version history and easy rollback
 
+## 💡 Usage Examples
+
+### PowerShell Functions
+
+```powershell
+# Connect to Minecraft server with smart SSH/PuTTY selection
+mcconsole
+mcconsole -Server "localhost"
+mcconsole -User "admin" -ScreenSession "screen_name"
+
+# Upgrade all packages (with confirmation)
+wingetupgrade
+
+# Force upgrade without confirmation
+wingetupgrade -Force
+
+# Preview what would be upgraded (dry-run)
+wingetupgrade -DryRun
+
+# Upgrade specific packages
+wingetupgrade -Include "Microsoft.VisualStudioCode", "Git.Git" -Force
+
+# Verbose output with progress
+wingetupgrade -Verbose
+
+# Respects PowerShell standards
+wingetupgrade -WhatIf
+wingetupgrade -Confirm
+
+# Check for profile updates (with cache)
+Update-Profile
+
+# Force check bypassing cache (with verbose details)
+Update-Profile -Force -Verbose
+```
+
+### Port-Specific DNS Routing
+
+```bash
+# Show current routing rules
+sudo ./scripts/setup-port-cloudflare-dns.sh status
+
+# Route additional ports to Cloudflare
+sudo PORTS="19132 25565 8080" ./scripts/setup-port-cloudflare-dns.sh setup
+
+# Use alternative DNS server
+sudo CLOUDFLARE_DNS="1.0.0.1" ./scripts/setup-port-cloudflare-dns.sh setup
+
+# Remove only this script's rules (safe)
+sudo ./scripts/setup-port-cloudflare-dns.sh remove
+
+# Back up rules before reset
+sudo ./scripts/setup-port-cloudflare-dns.sh status > iptables-backup-$(date +%s).txt
+sudo ./scripts/setup-port-cloudflare-dns.sh reset
+```
+
 ## 📝 Planned Enhancements
 
 - [ ] Tmux configuration
