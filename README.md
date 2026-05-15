@@ -625,7 +625,7 @@ Check out the shortcuts.md file for a list of useful commands and shortcuts to e
 - [Spaceship Prompt](https://spaceship-prompt.sh/)
 - [DNSCrypt-Proxy](https://dnscrypt.info/)
 - [ASDF Version Manager](https://asdf-vm.com/)
-- [PowerShell](https://docs.microsoft.com/en-us/powershell/)
+- [PowerShell Documentation](https://docs.microsoft.com/en-us/powershell/)
 - [Oh-My-Posh](https://ohmyposh.dev/)
 - [Nerd Fonts](https://www.nerdfonts.com/)
 - [Winget](https://github.com/microsoft/winget-cli)
