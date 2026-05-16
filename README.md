@@ -7,6 +7,15 @@ Personal dotfiles for Linux and Windows, focused on a fast terminal workflow, se
 This repository contains my personal environment setup for Linux and Windows.  
 It includes Oh My Zsh with Spaceship Prompt and a custom theme, DNSCrypt-Proxy configuration, port-specific DNS routing, and Windows PowerShell automation for daily development tasks.
 
+## Compatibility & Notes
+
+- Linux scripts target Arch Linux (pacman) with systemd and iptables.
+- Run setup scripts as a regular user; they use sudo when needed.
+- The master installer [install.sh](install.sh) runs every script under [scripts](scripts/) including root-only or WIP scripts like [scripts/setup-port-cloudflare-dns.sh](scripts/setup-port-cloudflare-dns.sh), [scripts/asdf-setup.sh](scripts/asdf-setup.sh), and [scripts/dev-environment-setup.sh](scripts/dev-environment-setup.sh).
+- The Zsh prompt uses Spaceship by default; install it or switch to the custom theme in [zsh/.zshrc](zsh/.zshrc).
+- The Zsh config loads an optional env file from [credentials](credentials/) which is git-ignored.
+- The DNSCrypt setup script [scripts/setup-dnscrypt-proxy.sh](scripts/setup-dnscrypt-proxy.sh) disables systemd-resolved, rewrites /etc/resolv.conf, and makes it immutable.
+
 ## 🚀 Quick Start
 
 Setting up your environment is as simple as running a single command. The master install script handles everything from cloning the repository to executing all necessary setup scripts.
