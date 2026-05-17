@@ -18,46 +18,51 @@ It includes Oh My Zsh with Spaceship Prompt and a custom theme, DNSCrypt-Proxy c
 
 ## 🚀 Quick Start
 
-Setting up your environment is as simple as running a single command. The master install script handles everything from cloning the repository to executing all necessary setup scripts.
+Use the manual steps to run only what you need. The master installer [install.sh](install.sh) runs every script under [scripts](scripts/) and can stop if a script requires sudo or is still WIP.
 
-### One-Liner Installation
+### Manual Steps (recommended)
 
-This command will clone the repository, change into the directory, and execute the installation script.
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/MF-Rozi/.dotfiles.git ~/dotfiles
+   cd ~/dotfiles
+   ```
+
+2. **Run the Zsh setup script:**
+
+   ```bash
+   chmod +x scripts/setup-zsh.sh
+   ./scripts/setup-zsh.sh
+   ```
+
+3. **Run the DNSCrypt-Proxy setup script (non-root):**
+
+   ```bash
+   chmod +x scripts/setup-dnscrypt-proxy.sh
+   ./scripts/setup-dnscrypt-proxy.sh
+   ```
+
+4. **Run the port-specific Cloudflare DNS setup (optional, requires sudo):**
+
+   ```bash
+   chmod +x scripts/setup-port-cloudflare-dns.sh
+   sudo ./scripts/setup-port-cloudflare-dns.sh
+   ```
+
+5. **Windows PowerShell profile (Windows only):**
+   ```powershell
+   cd ~/dotfiles/windows
+   .\install-profile.ps1
+   ```
+
+### Master Install (runs every script)
 
 ```bash
 git clone https://github.com/MF-Rozi/.dotfiles.git ~/dotfiles && cd ~/dotfiles && chmod +x ./install.sh && ./install.sh
 ```
 
-### Manual Steps
-
-If you prefer to run the setup scripts individually instead of using the master `install.sh` script:
-
-1.  **Clone the repository:**
-
-    ```bash
-    git clone https://github.com/MF-Rozi/.dotfiles.git ~/dotfiles
-    cd ~/dotfiles
-    ```
-
-2.  **Run the Zsh setup script:**
-
-    ```bash
-    chmod +x scripts/setup-zsh.sh
-    ./scripts/setup-zsh.sh
-    ```
-
-3.  **Run the dnscrypt-proxy setup script:**
-    ```bash
-    chmod +x scripts/setup-dnscrypt-proxy.sh
-    ./scripts/setup-dnscrypt-proxy.sh
-    ```
-4.  **Run the port-specific Cloudflare DNS setup (optional):**
-    ```bash
-    chmod +x scripts/setup-port-cloudflare-dns.sh
-    sudo ./scripts/setup-port-cloudflare-dns.sh
-    ```
-
-After the scripts finish, restart your terminal to see the changes.
+> Note: This will attempt to run the port-specific DNS script (sudo) and any WIP scripts. You can comment out lines in [install.sh](install.sh) to skip specific scripts if needed.
 
 ## 📁 Repository Structure
 
