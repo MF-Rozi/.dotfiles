@@ -429,8 +429,9 @@ Register-ArgumentCompleter -CommandName mcconsole -ParameterName Server -ScriptB
 
 ### Customize wingetupgrade Ignore List
 
-````powershell
-# Edit profile.ps1 - modify the $ignorelist array
+Edit the ignore list array in [windows/profile.ps1](windows/profile.ps1):
+
+```powershell
 $ignorelist = @(
     "LeNgocKhoa.Laragon"
     "Discord.Discord"
@@ -438,7 +439,7 @@ $ignorelist = @(
     "Spicetify.Spicetify"
     "YourPackage.Id"              # Add your own packages
 )
-
+```
 
 ### Theme Management
 
@@ -653,4 +654,7 @@ Check out the shortcuts.md file for a list of useful commands and shortcuts to e
 - [VS Code](https://code.visualstudio.com/)
 
 **Happy coding!** 🚀
-````
+
+```
+
+```
