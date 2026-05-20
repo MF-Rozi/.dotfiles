@@ -7,6 +7,7 @@ set -e  # Exit on any error
 # Plugin Versions
 NODE_VERSION_DEFAULT="Latest:20"
 JAVA_VERSION_DEFAULT="latest:temurin-21"
+MAVEN_VERSION_DEFAULT="latest"
 
 check_root() {
     if [[ $EUID -eq 0 ]]; then
@@ -34,6 +35,7 @@ setup_asdf() {
     local plugins=(
         "nodejs"
         "java"
+        "maven"
     )
     for plugin in "${plugins[@]}"; do
         if asdf plugin-list | grep -q "^${plugin}$"; then
@@ -47,6 +49,10 @@ setup_asdf() {
             if [ "$plugin" == "java" ]; then
                 asdf install java $JAVA_VERSION_DEFAULT
                 asdf global java $JAVA_VERSION_DEFAULT
+            fi
+            if [ "$plugin" == "maven" ]; then
+                asdf install maven $MAVEN_VERSION_DEFAULT
+                asdf global maven $MAVEN_VERSION_DEFAULT
             fi
             echo -e "\033[0;32m[SUCCESS]\033[0m ASDF plugin '${plugin}' added successfully."
         fi
