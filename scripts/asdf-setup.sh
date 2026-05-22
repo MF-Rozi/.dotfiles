@@ -42,19 +42,19 @@ setup_asdf() {
             echo -e "\033[0;32m[SUCCESS]\033[0m ASDF plugin '${plugin}' is already added."
         else
             asdf plugin add "$plugin"
-            if [ "$plugin" == "nodejs" ]; then
-                asdf install nodejs $NODE_VERSION_DEFAULT
-                asdf set -u nodejs $NODE_VERSION_DEFAULT
-            fi
-            if [ "$plugin" == "java" ]; then
-                asdf install java $JAVA_VERSION_DEFAULT
-                asdf set -u java $JAVA_VERSION_DEFAULT
-            fi
-            if [ "$plugin" == "maven" ]; then
-                asdf install maven $MAVEN_VERSION_DEFAULT
-                asdf set -u maven $MAVEN_VERSION_DEFAULT
-            fi
             echo -e "\033[0;32m[SUCCESS]\033[0m ASDF plugin '${plugin}' added successfully."
+        fi
+        if [ "$plugin" == "nodejs" ]; then
+            asdf install nodejs $NODE_VERSION_DEFAULT
+            asdf set -u nodejs $NODE_VERSION_DEFAULT
+        fi
+        if [ "$plugin" == "java" ]; then
+            asdf install java $JAVA_VERSION_DEFAULT
+            asdf set -u java $JAVA_VERSION_DEFAULT
+        fi
+        if [ "$plugin" == "maven" ]; then
+            asdf install maven $MAVEN_VERSION_DEFAULT
+            asdf set -u maven $MAVEN_VERSION_DEFAULT
         fi
     done
     
