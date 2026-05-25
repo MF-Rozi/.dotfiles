@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/bin/bash
 # Dev Environment Setup Script for Arch Linux
 # This script installs and configures essential development tools.
 
@@ -17,7 +17,16 @@ flutterSetup(){
         echo -e "${GREEN}[SUCCESS]${NC} FVM is already installed."
     else
         echo -e "${BLUE}[INFO]${NC} Installing FVM (Flutter Version Manager)..."
+        if ! command -v pacman &> /dev/null; then
+            echo -e "${RED}[ERROR]${NC} pacman not found. This script targets Arch Linux."
+            exit 1
+        fi
         sudo pacman -S --noconfirm dart
+        echo -e "${GREEN}[SUCCESS]${NC} Dart installed successfully."
+
+        echo -e "${BLUE}[INFO]${NC} Installing FVM via dart pub..."
+        dart pub global activate fvm
+        export PATH="$PATH:$HOME/.pub-cache/bin"
         echo -e "${GREEN}[SUCCESS]${NC} FVM installed successfully."
         if command -v fvm &> /dev/null; then
             echo -e "${GREEN}[SUCCESS]${NC} FVM is now available."
@@ -35,3 +44,5 @@ main() {
     echo -e "${GREEN}[SUCCESS]${NC} Development environment setup completed successfully."
     echo "Please restart your terminal or run 'source ~/.zshrc' to apply changes."
 }
+
+main "$@"
