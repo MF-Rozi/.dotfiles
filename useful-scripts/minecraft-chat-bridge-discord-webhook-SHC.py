@@ -11,13 +11,13 @@ import requests
 
 # ==================== CONFIGURATION ====================
 # Your Discord Webhook URL
-DISCORD_WEBHOOK_URL = "INSERT YOUR DISCORD WEBHOOK URL HERE"
+DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1508843806957506625/B4SiFJPodQeJWzEocdipeQPhkLPhxEP1aV56KE5TwsJ_6ahjP5W5WvqIslHv3NJqFcfY"
 
-# Path to your Minecraft instance log file
+# Path to your Prism Launcher instance log file
 LOG_PATH = os.path.expanduser(
-    "INSERT THE PATH TO YOUR Minecraft LOG FILE HERE"
+    "~/.local/share/PrismLauncher/instances/1.21.11/minecraft/logs/latest.log"
 )
-MINECRAFT_USERNAME = "INSERT YOUR MINECRAFT USERNAME HERE"
+MINECRAFT_USERNAME = "GenjirouHD" # Change This to Your Minecraft Username
 # =======================================================
 
 # Regex to match game chat from the logs
@@ -46,13 +46,12 @@ def tail_log():
     """Watches the latest.log file for updates in real-time."""
     global TOTEM_COUNT
     print(f"[*] Starting log monitor on: {LOG_PATH}")
-    print("[*] Forwarding all chat messages...")
+    print("[*] Filtering strictly for [OOC] messages...")
     print("[*] Totem counter starts at 0 for this session.")
     send_to_discord(
         f"Current Session Started by: {MINECRAFT_USERNAME}\n\n"
         f"Totem Counter Started now from {TOTEM_COUNT}"
     )
-
     # Wait for the file to be created if the game isn't running yet
     while not os.path.exists(LOG_PATH):
         time.sleep(1)
@@ -79,12 +78,14 @@ def tail_log():
                 # Clean up any accidental double spaces left behind by the removal
                 clean_chat = re.sub(r"\s+", " ", clean_chat).strip()
 
-                print(f"[Forwarding] {clean_chat}")
-                send_to_discord(clean_chat)
-
                 if TOTEM_REGEX.search(clean_chat):
                     TOTEM_COUNT += 1
                     send_to_discord(f"[Totem Counter] Totems this session: {TOTEM_COUNT}")
+
+                # Only forward Out-Of-Character messages
+                if "[OOC]" in clean_chat:
+                    print(f"[Forwarding] {clean_chat}")
+                    send_to_discord(clean_chat)
 
 if __name__ == "__main__":
     try:
