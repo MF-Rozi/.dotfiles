@@ -11,13 +11,13 @@ import requests
 
 # ==================== CONFIGURATION ====================
 # Your Discord Webhook URL
-DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1508843806957506625/B4SiFJPodQeJWzEocdipeQPhkLPhxEP1aV56KE5TwsJ_6ahjP5W5WvqIslHv3NJqFcfY"
+DISCORD_WEBHOOK_URL = "INSERT YOUR DISCORD WEBHOOK URL HERE"
 
 # Path to your Prism Launcher instance log file
 LOG_PATH = os.path.expanduser(
     "~/.local/share/PrismLauncher/instances/1.21.11/minecraft/logs/latest.log"
 )
-MINECRAFT_USERNAME = "GenjirouHD" # Change This to Your Minecraft Username
+MINECRAFT_USERNAME = "INSERT YOUR MINECRAFT USERNAME HERE" # Change This to Your Minecraft Username
 # =======================================================
 
 # Regex to match game chat from the logs
