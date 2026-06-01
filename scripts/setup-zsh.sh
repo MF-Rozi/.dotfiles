@@ -65,6 +65,10 @@ install_oh_my_zsh() {
 
 link_zshrc() {
     print_status "Setting up .zshrc..."
+    if [[ ! -f "$ZSHRC_SOURCE" ]]; then
+        print_error "Missing source file: $ZSHRC_SOURCE"
+        exit 1
+    fi
     # Backup existing .zshrc if it's a real file or a different symlink
     if [ -f "$ZSHRC_DEST" ] && [ ! -L "$ZSHRC_DEST" ]; then
         print_status "Backing up existing .zshrc to .zshrc.bak"
