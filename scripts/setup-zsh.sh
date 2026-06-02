@@ -85,6 +85,11 @@ link_zshrc() {
 
 link_theme() {
     print_status "Setting up custom theme..."
+    if [[ ! -f "$THEME_SOURCE" ]]; then
+        print_error "Missing source file: $THEME_SOURCE"
+        exit 1
+    fi
+
     # Create the custom themes directory if it doesn't exist
     mkdir -p "$ZSH_CUSTOM_THEMES_DIR"
     
