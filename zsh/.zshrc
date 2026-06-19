@@ -204,3 +204,7 @@ export PATH="$ANDROID_SDK_HOME/platform-tools:$PATH"
 
 
 export PATH="$PATH:$(composer global config bin-dir --absolute --quiet)"
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/mfrozi/.local/bin:$PATH"
