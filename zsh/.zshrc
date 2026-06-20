@@ -181,6 +181,7 @@ mcconsole(){
 }
 
 alias docker="podman"
+alias code="antigravity-ide"
 
 # export PATH=$PATH:/home/mfrozi/.spicetify
 # export PATH="$HOME/.local/bin:/usr/lib/node_modules/corepack/shims:$HOME/.spicetify:$PATH"
