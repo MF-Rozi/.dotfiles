@@ -275,7 +275,7 @@ Function wingetupgrade {
         Write-Host ""
         Write-Host "[$($i + 1)/$($packages.Count)] Upgrading $($pkg.Name) [$($pkg.Id)]" -ForegroundColor Cyan
 
-        & winget upgrade --id $pkg.Id --accept-package-agreements --accept-source-agreements --silent 2>&1 | Out-Null
+        $upgradeOutput = & winget upgrade --id $pkg.Id --accept-package-agreements --accept-source-agreements --silent 2>&1
         $pkg.ExitCode = $LASTEXITCODE
 
         if ($LASTEXITCODE -eq 0) {
@@ -286,6 +286,9 @@ Function wingetupgrade {
         else {
             $pkg.Status = "Failed"
             Write-Warning "  Failed with exit code $LASTEXITCODE"
+            if ($upgradeOutput) {
+                Write-Host ($upgradeOutput | Out-String) -ForegroundColor Red
+            }
             $failedPackages.Add($pkg)
         }
     }
