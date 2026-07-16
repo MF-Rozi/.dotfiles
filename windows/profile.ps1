@@ -263,6 +263,7 @@ Function wingetupgrade {
 
     Write-Host ""
     Write-Host "Starting upgrades…" -ForegroundColor Cyan
+    $totalStopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
     $successCount = 0
     $failedPackages = [Collections.Generic.List[object]]::new()
@@ -275,16 +276,21 @@ Function wingetupgrade {
         Write-Host ""
         Write-Host "[$($i + 1)/$($packages.Count)] Upgrading $($pkg.Name) [$($pkg.Id)]" -ForegroundColor Cyan
 
+        $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
         $upgradeOutput = & winget upgrade --id $pkg.Id --accept-package-agreements --accept-source-agreements --silent 2>&1
+        $stopwatch.Stop()
+
         $pkg.ExitCode = $LASTEXITCODE
+        $elapsedSec = [math]::Round($stopwatch.Elapsed.TotalSeconds, 1)
 
         if ($LASTEXITCODE -eq 0) {
             $pkg.Status = "Success"
-            Write-Host "  OK" -ForegroundColor Green
+            Write-Host "  [SUCCESS] (took $($elapsedSec)s)" -ForegroundColor Green
             $successCount++
         }
         else {
             $pkg.Status = "Failed"
+            Write-Host "  [FAILED] (took $($elapsedSec)s)" -ForegroundColor Red
             Write-Warning "  Failed with exit code $LASTEXITCODE"
             if ($upgradeOutput) {
                 Write-Host ($upgradeOutput | Out-String) -ForegroundColor Red
@@ -292,16 +298,24 @@ Function wingetupgrade {
             $failedPackages.Add($pkg)
         }
     }
+    $totalStopwatch.Stop()
 
     Write-Progress -Activity "Upgrading Packages" -Completed
 
     $failCount = $failedPackages.Count
+    $totalElapsed = $totalStopwatch.Elapsed
+    $totalDurationStr = if ($totalElapsed.TotalMinutes -ge 1) {
+        "$([math]::Floor($totalElapsed.TotalMinutes))m $([math]::Round($totalElapsed.Seconds))s"
+    } else {
+        "$([math]::Round($totalElapsed.TotalSeconds, 1))s"
+    }
 
     Write-Host ""
     Write-Host "Summary" -ForegroundColor Cyan
     Write-Host "  Total packages   : $($packages.Count)" -ForegroundColor White
     Write-Host "  Successful       : $successCount" -ForegroundColor Green
     Write-Host "  Failed           : $failCount" -ForegroundColor Red
+    Write-Host "  Total time       : $totalDurationStr" -ForegroundColor White
 
     if ($failCount -gt 0) {
         Write-Host ""
