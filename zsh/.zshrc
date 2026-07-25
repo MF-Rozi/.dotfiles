@@ -180,8 +180,40 @@ mcconsole(){
 
 }
 
+git-future-commit() {
+  local days
+  if [ -n "$1" ]; then
+    days=$1
+    shift
+  else
+    read "days?Enter number of days into the future: "
+  fi
+
+  if ! [[ "$days" =~ ^[0-9]+$ ]]; then
+    echo "Error: Days must be a positive integer"
+    return 1
+  fi
+
+  local time_choice
+  read "time_choice?Set commit time to 00:01 (12:01 AM) or use current time? (00:01/current) [current]: "
+
+  local future_date
+  if [[ "$time_choice" == "00:01" || "$time_choice" == "00.01" || "$time_choice" == "12:01" || "$time_choice" == "12.01" || "$time_choice" == "1" || "$time_choice" == "y" || "$time_choice" == "Y" ]]; then
+    future_date=$(date -d "+$days days 00:01:00" --rfc-3339=seconds)
+  else
+    future_date=$(date -d "+$days days" --rfc-3339=seconds)
+  fi
+
+  echo "Committing with author and committer dates set to: $future_date"
+  GIT_AUTHOR_DATE="$future_date" GIT_COMMITTER_DATE="$future_date" git commit "$@"
+}
+
+
+
 alias docker="podman"
 alias code="antigravity-ide"
+
+
 
 # export PATH=$PATH:/home/mfrozi/.spicetify
 # export PATH="$HOME/.local/bin:/usr/lib/node_modules/corepack/shims:$HOME/.spicetify:$PATH"
