@@ -209,10 +209,10 @@ git-future-commit() {
 }
 
 
-
 alias docker="podman"
 alias code="antigravity-ide"
-
+# Battery Limit Toggle
+alias batlimit="~/dotfiles/useful-scripts/toggle-battery-limit.sh"
 
 
 # export PATH=$PATH:/home/mfrozi/.spicetify
