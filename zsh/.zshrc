@@ -208,6 +208,59 @@ git-future-commit() {
   GIT_AUTHOR_DATE="$future_date" GIT_COMMITTER_DATE="$future_date" git commit "$@"
 }
 
+plugin-wget-sftp() {
+    if [ -z "$1" ]; then
+        echo "Usage: plugin-wget-sftp <URL> [server_alias | username@host:port]"
+        return 1
+    fi
+
+    local url="$1"
+    local target="${2:-lobby}"
+    
+    # If target is an alias (does not contain '@' or ':')
+    if [[ ! "$target" == *@* && ! "$target" == *:* ]]; then
+        local clean_target="${target//[^a-zA-Z0-9_]/}"
+        local var_name="chaos_${clean_target}"
+        local env_val
+        eval "env_val=\$$var_name"
+        
+        if [ -n "$env_val" ]; then
+            target="$env_val"
+        elif [ "$clean_target" = "lobby" ]; then
+            # Fallback default connection string for lobby
+            target="chaos.6ec32e81@mc.mfrozi.my.id:2022"
+        else
+            echo "Error: Variable '$var_name' is not defined in credentials/.env"
+            return 1
+        fi
+    fi
+
+    # Parse target into connection string and port
+    local host_part="${target%%:*}"
+    local port_part="${target##*:}"
+    
+    # Fallback to port 2022 if no colon was specified in custom target
+    if [ "$host_part" = "$port_part" ]; then
+        port_part="2022"
+    fi
+
+    # Extract filename or default to plugin.jar
+    local filename=$(basename "${url%%\?*}")
+    if [[ ! "$filename" == *.jar ]]; then
+        filename="plugin.jar"
+    fi
+
+    local filepath="/tmp/$filename"
+
+    echo "Downloading file..."
+    wget -q --show-progress "$url" -O "$filepath"
+    
+    echo "Uploading to $host_part on port $port_part..."
+    sftp -P "$port_part" "$host_part" <<< "put $filepath plugins/"
+    
+    rm "$filepath"
+    echo "Done!"
+}
 
 alias docker="podman"
 alias code="antigravity-ide"
