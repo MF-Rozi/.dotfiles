@@ -266,6 +266,9 @@ alias docker="podman"
 alias code="antigravity-ide"
 # Battery Limit Toggle
 alias batlimit="~/dotfiles/useful-scripts/toggle-battery-limit.sh"
+# Turbo Fan Toggle
+alias turbofan="~/dotfiles/useful-scripts/toggle-fan-turbo.sh"
+
 
 
 # export PATH=$PATH:/home/mfrozi/.spicetify
