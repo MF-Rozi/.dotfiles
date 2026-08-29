@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Setup Customizable KDE Plasma 6 Left Vertical Sidebar Panel
+# Setup Customizable KDE Sliding Glass Dashboard Drawer
 # ==============================================================================
-# Automates the creation and configuration of a vertical auto-hiding sidebar
-# panel in KDE Plasma 6 with Acer Nitro Fan/Battery controls and hotkeys.
+# Automates the setup of the native sliding Nitro Sense glass drawer with
+# hardware controls (Fans, Turbo, Battery Health, CPU/RAM stats) and shortcuts.
 # ==============================================================================
 
 set -e
@@ -18,14 +18,13 @@ NC='\033[0m' # No Color
 DOTFILES_DIR="$HOME/dotfiles"
 SCRIPTS_DIR="$DOTFILES_DIR/scripts"
 USEFUL_SCRIPTS_DIR="$DOTFILES_DIR/useful-scripts"
-PLASMOIDS_SRC_DIR="$DOTFILES_DIR/plasmoids"
-PLASMOIDS_DEST_DIR="$HOME/.local/share/plasma/plasmoids"
+DRAWER_DIR="$DOTFILES_DIR/sidebar-drawer"
 
-JS_LAYOUT_FILE="$SCRIPTS_DIR/setup-plasma-sidebar.js"
 TOGGLE_SCRIPT="$SCRIPTS_DIR/toggle-plasma-sidebar.sh"
-STATUS_SCRIPT="$SCRIPTS_DIR/get-nitro-status.sh"
 DESKTOP_ENTRY_DIR="$HOME/.local/share/applications"
 DESKTOP_ENTRY_FILE="$DESKTOP_ENTRY_DIR/toggle-plasma-sidebar.desktop"
+AUTOSTART_DIR="$HOME/.config/autostart"
+AUTOSTART_FILE="$AUTOSTART_DIR/nitro-drawer.desktop"
 
 # Check if running as root
 if [[ $EUID -eq 0 ]]; then
@@ -33,48 +32,17 @@ if [[ $EUID -eq 0 ]]; then
     exit 1
 fi
 
-echo -e "${BLUE}[INFO]${NC} Starting KDE Plasma 6 Sidebar setup..."
+echo -e "${BLUE}[INFO]${NC} Starting Nitro Sense Sliding Drawer setup..."
 
 # Ensure helper scripts have executable permissions
 chmod +x "$SCRIPTS_DIR"/*.sh 2>/dev/null || true
 chmod +x "$USEFUL_SCRIPTS_DIR"/*.sh 2>/dev/null || true
 
-# Install custom plasmoids (e.g. Nitro Control)
-if [ -d "$PLASMOIDS_SRC_DIR" ]; then
-    echo -e "${BLUE}[INFO]${NC} Installing custom plasmoids..."
-    mkdir -p "$PLASMOIDS_DEST_DIR"
-    for plasmoid in "$PLASMOIDS_SRC_DIR"/*; do
-        if [ -d "$plasmoid" ]; then
-            p_name=$(basename "$plasmoid")
-            ln -sfn "$plasmoid" "$PLASMOIDS_DEST_DIR/$p_name"
-            echo -e "${GREEN}[INFO]${NC} Linked plasmoid: $p_name"
-        fi
-    done
-fi
-
-# Check for qdbus / qdbus6
-if command -v qdbus6 >/dev/null 2>&1; then
-    QDBUS_CMD="qdbus6"
-elif command -v qdbus >/dev/null 2>&1; then
-    QDBUS_CMD="qdbus"
-else
-    echo -e "${YELLOW}[WARNING]${NC} Neither 'qdbus6' nor 'qdbus' found. Skipping live panel setup."
-    exit 0
-fi
-
-# Check if plasmashell is running
-if ! pgrep -x "plasmashell" >/dev/null 2>&1; then
-    echo -e "${YELLOW}[WARNING]${NC} KDE Plasma shell is not currently running. Skipping live injection."
-else
-    if [ ! -f "$JS_LAYOUT_FILE" ]; then
-        echo -e "${RED}[ERROR]${NC} Layout script not found at '$JS_LAYOUT_FILE'."
-        exit 1
-    fi
-
-    echo -e "${BLUE}[INFO]${NC} Applying declarative sidebar panel layout..."
-    JS_SCRIPT=$(cat "$JS_LAYOUT_FILE")
-    "$QDBUS_CMD" org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "$JS_SCRIPT"
-    echo -e "${GREEN}[SUCCESS]${NC} Left vertical sidebar panel created and configured."
+# Clean up any legacy thin left panels from Plasma 6
+if command -v qdbus6 >/dev/null 2>&1 && pgrep -x "plasmashell" >/dev/null 2>&1; then
+    echo -e "${BLUE}[INFO]${NC} Cleaning up legacy thin left panels..."
+    CLEAN_JS='var pList = panels(); for (var i = pList.length - 1; i >= 0; --i) { if (pList[i].location === "left") pList[i].remove(); }'
+    qdbus6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "$CLEAN_JS" >/dev/null 2>&1 || true
 fi
 
 # Register Desktop entry for global shortcuts integration
@@ -83,14 +51,28 @@ mkdir -p "$DESKTOP_ENTRY_DIR"
 cat <<EOF > "$DESKTOP_ENTRY_FILE"
 [Desktop Entry]
 Type=Application
-Name=Toggle Plasma Sidebar
-Comment=Toggle KDE Plasma 6 Left Vertical Sidebar Visibility
+Name=Toggle Nitro Sense Drawer
+Comment=Toggle Sliding Glass Nitro Dashboard Drawer
 Exec=$TOGGLE_SCRIPT
 Icon=sidebar-show-symbolic
 Terminal=false
 Categories=Utility;
 X-KDE-GlobalAccel-CommandShortcut=true
 StartupNotify=false
+EOF
+
+# Register Autostart so the background drawer is ready on login
+echo -e "${BLUE}[INFO]${NC} Creating autostart entry for background drawer daemon..."
+mkdir -p "$AUTOSTART_DIR"
+cat <<EOF > "$AUTOSTART_FILE"
+[Desktop Entry]
+Type=Application
+Name=Nitro Sense Drawer
+Comment=Background daemon for sliding glass dashboard drawer
+Exec=bash -c "nohup qml6 $DRAWER_DIR/main.qml >/dev/null 2>&1 &"
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
 EOF
 
 # Register Global Shortcuts in KDE Plasma 6
@@ -101,14 +83,20 @@ if command -v kwriteconfig6 >/dev/null 2>&1; then
     kwriteconfig6 --file kglobalshortcutsrc --group "kaccess" --key "Toggle Screen Reader On and Off" "none,none,Toggle Screen Reader On and Off"
 
     # Register toggle shortcuts
-    kwriteconfig6 --file kglobalshortcutsrc --group "services/toggle-plasma-sidebar.desktop" --key "_k_friendly_name" "Toggle Plasma Sidebar"
-    kwriteconfig6 --file kglobalshortcutsrc --group "services/toggle-plasma-sidebar.desktop" --key "_launch" "Launch (1)\tMeta+Alt+S,none,Toggle Plasma Sidebar"
+    kwriteconfig6 --file kglobalshortcutsrc --group "services/toggle-plasma-sidebar.desktop" --key "_k_friendly_name" "Toggle Nitro Sense Drawer"
+    kwriteconfig6 --file kglobalshortcutsrc --group "services/toggle-plasma-sidebar.desktop" --key "_launch" "Launch (1)\tMeta+Alt+S,none,Toggle Nitro Sense Drawer"
 
     # Reload KGlobalAccel shortcuts daemon
-    if "$QDBUS_CMD" org.kde.KGlobalAccel /KGlobalAccel >/dev/null 2>&1; then
-        "$QDBUS_CMD" org.kde.KGlobalAccel /KGlobalAccel reloadConfig >/dev/null 2>&1 || true
+    if command -v qdbus6 >/dev/null 2>&1; then
+        qdbus6 org.kde.KGlobalAccel /KGlobalAccel reloadConfig >/dev/null 2>&1 || true
     fi
     echo -e "${GREEN}[SUCCESS]${NC} Global shortcuts registered."
 fi
 
-echo -e "${GREEN}✅ KDE Plasma 6 Customizable Sidebar setup completed successfully!${NC}"
+# Launch drawer process if not already running
+if ! pgrep -f "qml6.*sidebar-drawer/main.qml" >/dev/null 2>&1; then
+    echo -e "${BLUE}[INFO]${NC} Launching Nitro Sense Drawer..."
+    nohup qml6 "$DRAWER_DIR/main.qml" >/dev/null 2>&1 &
+fi
+
+echo -e "${GREEN}✅ Nitro Sense Sliding Glass Dashboard Drawer setup completed successfully!${NC}"
