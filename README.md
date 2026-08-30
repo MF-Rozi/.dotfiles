@@ -89,6 +89,9 @@ dotfiles/
 │   ├── setup-zsh.sh                      # Zsh and Oh My Zsh installation
 │   ├── setup-dnscrypt-proxy.sh           # DNSCrypt-Proxy setup for Arch Linux
 │   ├── setup-port-cloudflare-dns.sh      # Route specific ports to Cloudflare DNS
+│   ├── setup-plasma-sidebar.sh           # KDE Plasma 6 customizable sidebar setup
+│   ├── setup-plasma-sidebar.js           # Plasma 6 JS layout definition
+│   ├── toggle-plasma-sidebar.sh          # Hotkey toggle helper script
 │   ├── asdf-setup.sh                     # ASDF version manager setup
 │   └── dev-environment-setup.sh          # Development environment setup
 ├── shortcuts/
@@ -147,7 +150,27 @@ dotfiles/
   - Automatic log file generation with timestamps
   - Support for custom DNS servers via environment variables
 
-  ### Development Tools
+  ### KDE Plasma 6 Sidebar & Hotkeys
+
+- **Declarative vertical left sidebar** built with native Plasma 6 D-Bus scripting
+- **Auto-hiding** on left screen edge hover to maximize desktop workspace
+- **Bundled widgets:**
+  - Application launcher (`Kickoff`)
+  - Expanding panel spacer (`panelspacer`)
+  - **Nitro Hardware Controls** (`org.mfrozi.nitrocontrol`):
+    - Real-time CPU & GPU Fan Speed RPM sensor indicators
+    - ⚡ 1-click **Turbo Fan Toggle** (switches fans between AUTO and TURBO max speed)
+    - 🛡️ 1-click **Battery Health Limit Toggle** (switches charge limit between 80% and 100%)
+    - Interactive hardware control cards with detailed system temperatures and battery capacity
+  - Real-time system resource monitors (CPU, RAM, Network)
+  - Session power actions (Lock, Suspend, Restart, Shut Down)
+- **Global shortcut triggers:**
+  - `Meta + Alt + S` (keyboard toggle)
+  - Dedicated **Acer NitroSense** hardware key (`Launch (1)` / `XF86Launch1`)
+- **Toggle helper:** [scripts/toggle-plasma-sidebar.sh](scripts/toggle-plasma-sidebar.sh) (switches between autohide and pinned open)
+- **Setup script:** [scripts/setup-plasma-sidebar.sh](scripts/setup-plasma-sidebar.sh) (creates and configures the sidebar live idempotently)
+
+### Development Tools
 
 - **ASDF version manager** setup script
 - **Development environment** automated configuration

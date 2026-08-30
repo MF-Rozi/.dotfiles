@@ -1,28 +1,21 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-# Check if acer-nitro-ec-dkms is installed
-if ! yay -Q acer-nitro-ec-dkms &> /dev/null; then
-    echo "acer-nitro-ec-dkms is not installed."
-    echo "Please install it by running: yay -S acer-nitro-ec-dkms"
-    exit 1
-fi
-
-# Ensure module is loaded
-if ! lsmod | grep -q acer_nitro_ec; then
-    echo "➜ Loading kernel module acer_nitro_ec..."
-    if ! sudo modprobe acer_nitro_ec; then
-        echo "❌ Error: Failed to load acer_nitro_ec kernel module."
-        exit 1
-    fi
+# Ensure script is run with bash
+if [ -z "${BASH_VERSION:-}" ]; then
+    exec bash "$0" "$@"
 fi
 
 # Locate the correct hwmon directory
 HWMON_DIR=""
-for dir in /sys/class/hwmon/hwmon*; do
-    if [ -f "$dir/name" ] && [ "$(cat "$dir/name")" = "acer_nitro_ec" ]; then
-        HWMON_DIR="$dir"
-        break
-    fi
+for _ in {1..10}; do
+    for dir in /sys/class/hwmon/hwmon*; do
+        if [ -f "$dir/name" ] && [ "$(cat "$dir/name" 2>/dev/null)" = "acer_nitro_ec" ]; then
+            HWMON_DIR="$dir"
+            break 2
+        fi
+    done
+    sleep 0.1
 done
 
 if [ -z "$HWMON_DIR" ]; then
@@ -30,36 +23,94 @@ if [ -z "$HWMON_DIR" ]; then
     exit 1
 fi
 
-echo "=========================================="
-echo " Acer Nitro Fan Turbo Toggle"
-echo "=========================================="
+ACTION="${1:-toggle}"
 
-# Read current mode of CPU fan (pwm1_enable)
-# 0 = Turbo, 1 = Manual, 2 = Auto
-CURRENT_MODE=$(cat "$HWMON_DIR/pwm1_enable" 2>/dev/null)
+notify() {
+    local title="$1"
+    local msg="$2"
+    local icon="$3"
+    if command -v notify-send &>/dev/null && [ -n "${DISPLAY:-${WAYLAND_DISPLAY:-}}" ]; then
+        notify-send -u normal -t 2500 -i "$icon" "$title" "$msg" 2>/dev/null || true
+    fi
+}
 
-if [ "$CURRENT_MODE" = "0" ]; then
-    echo "➜ Current State: TURBO (Max Speed)"
-    echo "➜ Changing to: AUTO..."
-    
-    echo 2 | sudo tee "$HWMON_DIR/pwm1_enable" > /dev/null
-    echo 2 | sudo tee "$HWMON_DIR/pwm2_enable" > /dev/null
-    
-    echo "✔ Fan speed set to AUTO."
-else
-    echo "➜ Current State: AUTO/MANUAL"
-    echo "➜ Changing to: TURBO (Max Speed)..."
-    
-    echo 0 | sudo tee "$HWMON_DIR/pwm1_enable" > /dev/null
-    echo 0 | sudo tee "$HWMON_DIR/pwm2_enable" > /dev/null
-    
-    echo "✔ Fan speed set to TURBO (Max Speed)."
-fi
+write_pwm() {
+    local val="$1"
+    local p1="$HWMON_DIR/pwm1_enable"
+    local p2="$HWMON_DIR/pwm2_enable"
 
-# Display current speeds
-if [ -f "$HWMON_DIR/fan1_input" ]; then
-    echo "CPU Fan: $(cat "$HWMON_DIR/fan1_input") RPM"
-fi
-if [ -f "$HWMON_DIR/fan2_input" ]; then
-    echo "GPU Fan: $(cat "$HWMON_DIR/fan2_input") RPM"
-fi
+    # 1. Direct write if sysfs is writable (after running setup-nitro-permissions.sh)
+    if [ -w "$p1" ] && [ -w "$p2" ]; then
+        echo "$val" > "$p1"
+        echo "$val" > "$p2"
+        return 0
+    fi
+
+    # 2. Sudo without password if sudoers rule is present
+    if sudo -n true 2>/dev/null; then
+        sudo sh -c "echo '$val' > '$p1' && echo '$val' > '$p2'"
+        return 0
+    fi
+
+    # 3. GUI Password prompt via Zenity if running from Desktop
+    if [ -n "${DISPLAY:-${WAYLAND_DISPLAY:-}}" ] && command -v zenity >/dev/null 2>&1; then
+        PASS=$(zenity --password --title="Acer Nitro Fan Control" 2>/dev/null || echo "")
+        if [ -n "$PASS" ]; then
+            if echo "$PASS" | sudo -S sh -c "echo '$val' > '$p1' && echo '$val' > '$p2'" 2>/dev/null; then
+                return 0
+            else
+                notify "Authentication Error" "Incorrect password entered." "dialog-error"
+                zenity --error --title="Authentication Failed" --text="Incorrect password. Fan speed was not changed." 2>/dev/null || true
+                exit 1
+            fi
+        else
+            echo "Cancelled by user."
+            exit 0
+        fi
+    fi
+
+    # 4. Fallback to pkexec or sudo in terminal
+    if [ -t 0 ]; then
+        sudo sh -c "echo '$val' > '$p1' && echo '$val' > '$p2'"
+    elif command -v pkexec >/dev/null 2>&1; then
+        pkexec sh -c "echo '$val' > '$p1' && echo '$val' > '$p2'"
+    fi
+}
+
+CURRENT_MODE=$(cat "$HWMON_DIR/pwm1_enable" 2>/dev/null || echo "")
+
+case "$ACTION" in
+    status)
+        if [ "$CURRENT_MODE" = "0" ]; then
+            echo "Current Mode: TURBO (Max Speed)"
+        elif [ "$CURRENT_MODE" = "1" ]; then
+            echo "Current Mode: MANUAL"
+        elif [ "$CURRENT_MODE" = "2" ]; then
+            echo "Current Mode: AUTO"
+        else
+            echo "Current Mode: UNKNOWN ($CURRENT_MODE)"
+        fi
+        exit 0
+        ;;
+    turbo|max|on)
+        echo "➜ Setting Fan Speed to: TURBO (Max Speed)..."
+        write_pwm 0
+        notify "Acer Nitro Fans" "Fan speed set to TURBO (Max)" "weather-storm"
+        ;;
+    auto|normal|off)
+        echo "➜ Setting Fan Speed to: AUTO..."
+        write_pwm 2
+        notify "Acer Nitro Fans" "Fan speed set to AUTO" "weather-few-clouds"
+        ;;
+    toggle|*)
+        if [ "$CURRENT_MODE" = "0" ]; then
+            echo "➜ Switching to: AUTO..."
+            write_pwm 2
+            notify "Acer Nitro Fans" "Fan speed switched to AUTO" "weather-few-clouds"
+        else
+            echo "➜ Switching to: TURBO (Max Speed)..."
+            write_pwm 0
+            notify "Acer Nitro Fans" "Fan speed switched to TURBO (Max)" "weather-storm"
+        fi
+        ;;
+esac

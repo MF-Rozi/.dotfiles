@@ -1,0 +1,19 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "m.fakhrulrozi10@gmail.com",
+                "Name": "MF-Rozi"
+            }
+        ],
+        "Category": "System Information",
+        "Description": "Acer Nitro Fan Speed, Turbo Toggle, and Battery Limit Controls",
+        "Icon": "sensors-fan-symbolic",
+        "Id": "org.mfrozi.nitrocontrol",
+        "License": "GPL-2.0+",
+        "Name": "Nitro Control",
+        "Website": "https://github.com/MF-Rozi/.dotfiles"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

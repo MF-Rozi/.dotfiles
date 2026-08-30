@@ -8,3 +8,4 @@ secrets/
 *.ppk
 api_keys.json
 config/local/
+backup/
