@@ -264,10 +264,13 @@ plugin-wget-sftp() {
 
 alias docker="podman"
 alias code="antigravity-ide"
+alias openclaude="node /usr/lib/openclaude/dist/cli.mjs"
 # Battery Limit Toggle
 alias batlimit="~/dotfiles/useful-scripts/toggle-battery-limit.sh"
 # Turbo Fan Toggle
 alias turbofan="~/dotfiles/useful-scripts/toggle-fan-turbo.sh"
+# SSH Server Toggle
+alias togglessh="~/dotfiles/useful-scripts/toggle-sshd.sh"
 
 
 
@@ -297,3 +300,6 @@ export PATH="$PATH:$(composer global config bin-dir --absolute --quiet)"
 
 # Added by Antigravity CLI installer
 export PATH="/home/mfrozi/.local/bin:$PATH"
+
+# opencode
+export PATH=/home/mfrozi/.opencode/bin:$PATH
