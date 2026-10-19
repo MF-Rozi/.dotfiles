@@ -40,13 +40,16 @@ else
 fi
 
 # Battery Limit check
+# Sysfs value (live state) is authoritative. The modprobe conf is only a
+# boot-time default and must never override a successful sysfs read.
 BAT_LIMIT_ENABLED=false
 if [ -f "/sys/bus/wmi/drivers/acer-wmi-battery/health_mode" ]; then
-    HEALTH_VAL=$(cat /sys/bus/wmi/drivers/acer-wmi-battery/health_mode 2>/dev/null || echo "0")
+    HEALTH_VAL=$(cat /sys/bus/wmi/drivers/acer-wmi-battery/health_mode 2>/dev/null || echo "")
     if [ "$HEALTH_VAL" = "1" ]; then
         BAT_LIMIT_ENABLED=true
     fi
 elif [ -f "/etc/modprobe.d/acer-wmi-battery.conf" ]; then
+    # Only used when the driver isn't loaded / sysfs node is absent
     if grep -q "enable_health_mode=1" "/etc/modprobe.d/acer-wmi-battery.conf" 2>/dev/null; then
         BAT_LIMIT_ENABLED=true
     fi

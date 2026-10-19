@@ -24,6 +24,10 @@ write_health() {
     # 1. Direct sysfs write if writable
     if [ -w "$SYSFS_HEALTH" ]; then
         echo "$val" > "$SYSFS_HEALTH"
+        # Best-effort: keep modprobe default in sync so state survives reboot
+        if sudo -n sh -c "echo 'options acer_wmi_battery enable_health_mode=$val' > '$CONF'" 2>/dev/null; then
+            :
+        fi
         return 0
     fi
 
@@ -63,10 +67,15 @@ echo " Acer Battery Charge Limit Toggle"
 echo "=========================================="
 
 # Check current state
+# Sysfs value (live state) is authoritative. The modprobe conf is only a
+# boot-time default and must never override a successful sysfs read.
 CURRENT_STATE="100"
-if [ -f "$SYSFS_HEALTH" ] && [ "$(cat "$SYSFS_HEALTH" 2>/dev/null)" = "1" ]; then
-    CURRENT_STATE="80"
+if [ -f "$SYSFS_HEALTH" ]; then
+    if [ "$(cat "$SYSFS_HEALTH" 2>/dev/null)" = "1" ]; then
+        CURRENT_STATE="80"
+    fi
 elif [ -f "$CONF" ] && grep -q "enable_health_mode=1" "$CONF"; then
+    # Only used when the driver isn't loaded / sysfs node is absent
     CURRENT_STATE="80"
 fi
 
