@@ -16,11 +16,12 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 DOTFILES_DIR="$HOME/dotfiles"
-SCRIPTS_DIR="$DOTFILES_DIR/scripts"
+SETUP_SCRIPTS_DIR="$DOTFILES_DIR/setup-scripts"
 USEFUL_SCRIPTS_DIR="$DOTFILES_DIR/useful-scripts"
+UTILS_DIR="$USEFUL_SCRIPTS_DIR/utils"
 DRAWER_DIR="$DOTFILES_DIR/sidebar-drawer"
 
-TOGGLE_SCRIPT="$SCRIPTS_DIR/toggle-plasma-sidebar.sh"
+TOGGLE_SCRIPT="$UTILS_DIR/toggle-plasma-sidebar.sh"
 DESKTOP_ENTRY_DIR="$HOME/.local/share/applications"
 DESKTOP_ENTRY_FILE="$DESKTOP_ENTRY_DIR/toggle-plasma-sidebar.desktop"
 AUTOSTART_DIR="$HOME/.config/autostart"
@@ -35,7 +36,9 @@ fi
 echo -e "${BLUE}[INFO]${NC} Starting Nitro Sense Sliding Drawer setup..."
 
 # Ensure helper scripts have executable permissions
-chmod +x "$SCRIPTS_DIR"/*.sh 2>/dev/null || true
+if [ -d "$UTILS_DIR" ]; then
+    chmod +x "$UTILS_DIR"/*.sh "$UTILS_DIR"/*.py 2>/dev/null || true
+fi
 chmod +x "$USEFUL_SCRIPTS_DIR"/*.sh 2>/dev/null || true
 
 # Clean up any legacy thin left panels from Plasma 6
@@ -76,15 +79,33 @@ X-GNOME-Autostart-enabled=true
 EOF
 
 # Register Global Shortcuts in KDE Plasma 6
-if command -v kwriteconfig6 >/dev/null 2>&1; then
+if command -v python3 >/dev/null 2>&1 && [ -f "$HOME/.config/kglobalshortcutsrc" ]; then
     echo -e "${BLUE}[INFO]${NC} Registering global shortcuts (NitroSense key / Meta+Alt+S)..."
 
     # Avoid conflict with kaccess screen reader shortcut
     kwriteconfig6 --file kglobalshortcutsrc --group "kaccess" --key "Toggle Screen Reader On and Off" "none,none,Toggle Screen Reader On and Off"
 
     # Register toggle shortcuts
-    kwriteconfig6 --file kglobalshortcutsrc --group "services/toggle-plasma-sidebar.desktop" --key "_k_friendly_name" "Toggle Nitro Sense Drawer"
-    kwriteconfig6 --file kglobalshortcutsrc --group "services/toggle-plasma-sidebar.desktop" --key "_launch" "Launch (1)\tMeta+Alt+S,none,Toggle Nitro Sense Drawer"
+    # NOTE: Plasma 6 stores service shortcuts in flat [services][<unique>] groups;
+    # a nested "services/<unique>" group is ignored by kglobalacceld.
+    SHORTCUT_GROUP='services][toggle-plasma-sidebar.desktop'
+    python3 - "$SHORTCUT_GROUP" <<'PYEOF'
+import sys, pathlib
+group = sys.argv[1]
+p = pathlib.Path.home() / ".config/kglobalshortcutsrc"
+lines = p.read_text().splitlines()
+
+# Drop any existing copy of the group, then re-append it in the native format
+cleaned, skip = [], False
+for l in lines:
+    if l.startswith("["):
+        skip = (l.strip() == f"[{group}]")
+    if not skip:
+        cleaned.append(l)
+cleaned.append(f"[{group}]")
+cleaned.append("_launch=Launch (1)\\tMeta+Alt+S,none,Toggle Nitro Sense Drawer")
+p.write_text("\n".join(cleaned) + "\n")
+PYEOF
 
     # Reload KGlobalAccel shortcuts daemon
     if command -v qdbus6 >/dev/null 2>&1; then
